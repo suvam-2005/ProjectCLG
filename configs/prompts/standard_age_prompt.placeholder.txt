@@ -1,0 +1,14 @@
+PLACEHOLDER — this is NOT the official ChildAgentEval "standard age prompting" text.
+
+The paper's exact baseline age-prompting wording is not published in the public
+repository (see docs/phase0_findings.md). This file exists only so the L0 harness has
+some prompt to exercise the Agent -> Guardrail -> Environment loop end to end against
+MockEnvironment during infrastructure development.
+
+Do not use output produced with this placeholder as an OFFICIAL_REPRODUCTION result.
+Replace this file's contents with the real wording only if/when official access
+provides it, and only for OFFICIAL_REPRODUCTION runs.
+
+Generic placeholder instruction used for harness testing only:
+"Respond and act the way you infer a person of the given target age would respond,
+based only on the information provided in the observation below."

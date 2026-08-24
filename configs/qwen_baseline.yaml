@@ -1,0 +1,29 @@
+# Configuration for the L0 (no-guardrail) baseline run.
+# Never edit experiment parameters in source code — change them here and re-run.
+# This file is a template: max_tasks/max_api_calls are placeholders and MUST be reviewed
+# before any real run, since Phase 0 could not determine the original paper's item counts.
+
+run_id: qwen_baseline_l0_dev
+
+model: qwen/qwen3.5-27b
+provider: openrouter
+temperature: 0
+max_output_tokens: 512
+
+benchmark_mode: dom_assisted   # matches paper: screenshot + sanitized accessibility tree
+
+# NOTE: baseline anchor ages (paper) vs skill-guided age bands are NOT interchangeable.
+target_age: 10                 # one of: 7, 10, 13, 16 (baseline anchor ages)
+
+guardrail: none                # none | L1_output | L2_action | L3_dynamic
+
+limits:
+  max_budget_usd: 10.00
+  soft_budget_usd: 8.00
+  max_tasks: 5
+  max_api_calls: 20
+  max_output_tokens_per_call: 512
+
+cost_state_file: ../.state/cost_ledger.json
+
+dev_validation_test_split: dev   # dev | validation | test — keep separate, see docs

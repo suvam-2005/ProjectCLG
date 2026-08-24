@@ -1,0 +1,16 @@
+{
+  "model": "qwen/qwen3.5-27b",
+  "provider": "openrouter",
+  "request_id": "gen-1787547019-3zRRjz6SkxbzVxOvm5dN",
+  "input_tokens": 41,
+  "output_tokens": 7,
+  "total_tokens": 48,
+  "cost_usd_this_request": 1.8915e-05,
+  "cumulative_cost_usd": 1.8915e-05,
+  "latency_s": 23.456432100007078,
+  "response_content": "{\"status\": \"ok\"}",
+  "pricing_usd_per_token": {
+    "prompt": 1.95e-07,
+    "completion": 1.56e-06
+  }
+}

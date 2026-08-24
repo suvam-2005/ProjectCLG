@@ -1,0 +1,26 @@
+{
+  "task_id": "phase1_smoke_test",
+  "subtest": "infra_smoke_test",
+  "target_age": 10,
+  "model": "qwen/qwen3.5-27b",
+  "condition": "L0_none",
+  "timestamp": 1787547021.1828613,
+  "step_number": 0,
+  "observation_metadata": {
+    "note": "not a ChildAgentEval task; harness validation only"
+  },
+  "action": {
+    "type": "chat",
+    "prompt": "Reply with exactly this JSON and nothing else: {\"status\": \"ok\"}"
+  },
+  "action_result": {
+    "content": "{\"status\": \"ok\"}"
+  },
+  "latency_s": 23.456432100007078,
+  "input_tokens": 41,
+  "output_tokens": 7,
+  "cumulative_cost_usd": 1.8915e-05,
+  "error": null,
+  "recovery": null,
+  "final_score": null
+}

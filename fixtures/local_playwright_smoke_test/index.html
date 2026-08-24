@@ -1,0 +1,49 @@
+<!--
+LOCAL_PLAYWRIGHT_SMOKE_TEST
+
+This is NOT ChildAgentEval and is not derived from any WISC or other copyrighted test
+material. It is a trivial, entirely original static page used only to validate that
+this project's Playwright environment adapter can launch a real browser, capture a
+screenshot, read an accessibility tree, and dispatch click/type/select/finish actions
+against real DOM elements. It must never be used to produce, or reported alongside,
+ChildAgentEval benchmark results.
+-->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>LOCAL_PLAYWRIGHT_SMOKE_TEST</title>
+</head>
+<body>
+  <h1>Local Playwright Smoke Test</h1>
+
+  <button id="start_button" type="button">Start</button>
+  <input id="answer_input" type="text" aria-label="Answer" />
+  <select id="choice_select" aria-label="Choice">
+    <option value="">-- choose --</option>
+    <option value="a">Option A</option>
+    <option value="b">Option B</option>
+  </select>
+  <button id="finish_button" type="button">Finish</button>
+
+  <div id="status" data-state="not_started">not_started</div>
+
+  <script>
+    const status = document.getElementById("status");
+    document.getElementById("start_button").addEventListener("click", () => {
+      status.dataset.state = "started";
+      status.textContent = "started";
+    });
+    document.getElementById("answer_input").addEventListener("input", (e) => {
+      status.dataset.typedValue = e.target.value;
+    });
+    document.getElementById("choice_select").addEventListener("change", (e) => {
+      status.dataset.selectedValue = e.target.value;
+    });
+    document.getElementById("finish_button").addEventListener("click", () => {
+      status.dataset.state = "completed";
+      status.textContent = "completed";
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+# L0 = Qwen3.5-27B + standard age prompt/configuration + NO guardrail. ZERO L1/L2/L3
+# intervention is permitted under this config — enforced by L0Config.from_yaml.
+# Never edit experiment parameters in source code — change them here and re-run.
+
+run_id: l0_dev
+
+model: qwen/qwen3.5-27b
+temperature: 0
+max_output_tokens: 512
+
+# Intended production adapter. Currently unavailable — see docs/phase0_findings.md.
+# `environment.adapter` below controls what actually runs today.
+benchmark_adapter: official_childagenteval
+
+environment:
+  # mock | playwright_generic | official_childagenteval
+  # "mock" and "playwright_generic" produce INDEPENDENT_EXPERIMENT data only, never
+  # OFFICIAL_REPRODUCTION results — see src/childagenteval_research/reproduction_kind.py
+  adapter: mock
+
+target_age: 10   # one of the paper's baseline anchor ages: 7, 10, 13, 16
+
+guardrail: none  # L0 only. Do not set L1/L2/L3 here until Phase 3+.
+
+budget:
+  max_budget_usd: 10.00
+  soft_budget_usd: 8.00
+  max_tasks: 5
+  max_api_calls: 20
+  max_output_tokens_per_call: 512
+
+logging:
+  trajectory_dir: ../runs
+  cost_state_file: ../.state/cost_ledger.json
+
+browser_mode:
+  headless: true
+  dom_assisted: true
+  screenshots_dir: null
+
+standard_age_prompt_path: prompts/standard_age_prompt.placeholder.txt
