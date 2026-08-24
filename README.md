@@ -5,10 +5,12 @@ Interactive AI Agents* (arXiv:2605.17894 / ChildAgentEval, PediaMedAI), then stu
 whether external cognitive guardrails (L1 output, L2 action, L3 dynamic trajectory-level)
 improve cognitive-age alignment relative to an L0 no-guardrail control.
 
-**Status: Phase 0-2 complete.** Start with
+**Status: Phase 0-3 complete.** Start with
 [`docs/phase0_findings.md`](docs/phase0_findings.md), then
 [`docs/phase1_smoke_test.md`](docs/phase1_smoke_test.md), then
-[`docs/phase2_l0_infrastructure.md`](docs/phase2_l0_infrastructure.md).
+[`docs/phase2_l0_infrastructure.md`](docs/phase2_l0_infrastructure.md), then
+[`docs/phase2_5_browser_smoke_test.md`](docs/phase2_5_browser_smoke_test.md), then
+[`docs/phase3_evaluation_framework.md`](docs/phase3_evaluation_framework.md).
 
 Phase 0's critical finding: the official ChildAgentEval repository contains no benchmark
 code, task definitions, scoring rubrics, or data — only a paper summary and an

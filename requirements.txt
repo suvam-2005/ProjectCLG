@@ -2,3 +2,4 @@ httpx
 pyyaml
 playwright
 python-dotenv
+matplotlib
