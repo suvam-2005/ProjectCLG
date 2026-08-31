@@ -118,6 +118,9 @@ class FakePage:
 
         return _Mouse()
 
+    def eval_on_selector_all(self, selector, expression):
+        return [{"id": "#go", "tag": "button", "label": "Go"}]
+
     def locator(self, selector):
         class _Locator:
             def aria_snapshot(self):
@@ -187,6 +190,7 @@ def test_playwright_adapter_dispatches_click_and_type(monkeypatch):
     obs = adapter.reset(make_task(metadata={"start_url": "https://example.invalid/start"}))
     assert obs.done is False
     assert obs.accessibility_tree == "- generic: root"
+    assert obs.available_elements == [{"id": "#go", "tag": "button", "label": "Go"}]
 
     result = adapter.execute_action(Action(action="click", target="#go"))
     assert result.success is True

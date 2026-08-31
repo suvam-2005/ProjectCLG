@@ -1,0 +1,42 @@
+<!--
+INDEPENDENT_INTERACTIVE_COGNITIVE_AGE_BENCHMARK — task wm_age10_v1
+NOT ChildAgentEval. Original content authored for this project. No WISC-derived material.
+-->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>wm_age10_v1</title>
+<style>
+  body { font-family: sans-serif; padding: 1.5em; }
+  .target, .choice { display: inline-block; margin: 0.4em; padding: 0.6em 1em;
+                       border: 1px solid #888; cursor: pointer; }
+  #finish_button { margin-top: 1.5em; }
+  #status { margin-top: 1em; font-weight: bold; }
+</style>
+</head>
+<body>
+  <p id="instructions">Remember the order of shapes listed below. Click the shape buttons in that exact order, then click Finish.</p>
+  <div id="stimulus"><p>Sequence to remember: square, star, circle, triangle</p></div>
+  <div id="interactive_area"><button class="target" id="target_circle" type="button">Circle</button>
+<button class="target" id="target_square" type="button">Square</button>
+<button class="target" id="target_triangle" type="button">Triangle</button>
+<button class="target" id="target_star" type="button">Star</button>
+<button class="target" id="target_hexagon" type="button">Hexagon</button></div>
+  <button id="finish_button" type="button">Finish</button>
+  <div id="status" data-state="not_started">not_started</div>
+  <script>
+    const status = document.getElementById("status");
+    document.querySelectorAll(".target, .choice").forEach((el) => {
+      el.addEventListener("click", () => {
+        status.dataset.state = "in_progress";
+        status.textContent = "in_progress";
+      });
+    });
+    document.getElementById("finish_button").addEventListener("click", () => {
+      status.dataset.state = "completed";
+      status.textContent = "completed";
+    });
+  </script>
+</body>
+</html>

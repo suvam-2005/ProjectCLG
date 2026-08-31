@@ -76,6 +76,25 @@ def test_decide_parses_valid_action():
     assert client.call_count == 1
 
 
+def test_decide_applies_recovery_when_content_is_none_not_a_crash():
+    # Regression test: a provider can return null content (e.g. the completion budget
+    # was entirely consumed by hidden reasoning tokens) — this must not crash
+    # json.loads(None), it must be treated as ordinary malformed output.
+    client = FakeModelClient([])
+    client.chat = lambda task_id, messages, max_tokens, extra=None: {
+        "request_id": "fake-1", "content": None, "input_tokens": 20, "output_tokens": 128,
+        "latency_s": 0.01, "cost_usd": 0.0001, "cumulative_cost_usd": 0.0001,
+    }
+    agent = make_agent(client, Path("unused.jsonl"))
+    agent.initialize(make_task())
+    env = MockEnvironment()
+    obs = env.reset(make_task())
+
+    decision = agent.decide(obs)
+    assert decision.proposed_action.source == ActionSource.MALFORMED_RECOVERY
+    assert decision.raw_model_output == ""
+
+
 def test_decide_applies_recovery_on_malformed_output_without_requerying_model():
     client = FakeModelClient(["not valid json at all"])
     agent = make_agent(client, Path("unused.jsonl"))

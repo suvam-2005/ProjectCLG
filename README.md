@@ -10,7 +10,11 @@ improve cognitive-age alignment relative to an L0 no-guardrail control.
 [`docs/phase1_smoke_test.md`](docs/phase1_smoke_test.md), then
 [`docs/phase2_l0_infrastructure.md`](docs/phase2_l0_infrastructure.md), then
 [`docs/phase2_5_browser_smoke_test.md`](docs/phase2_5_browser_smoke_test.md), then
-[`docs/phase3_evaluation_framework.md`](docs/phase3_evaluation_framework.md).
+[`docs/phase3_evaluation_framework.md`](docs/phase3_evaluation_framework.md), then
+[`docs/phase4_reproduction_specification.md`](docs/phase4_reproduction_specification.md)
+(with companions `docs/reproduction_specification.md`,
+`docs/claim_reproducibility_matrix.md`, `docs/author_access_requirements.md`, and
+`reference/reference_results.json`).
 
 Phase 0's critical finding: the official ChildAgentEval repository contains no benchmark
 code, task definitions, scoring rubrics, or data — only a paper summary and an

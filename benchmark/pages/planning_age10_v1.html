@@ -1,0 +1,42 @@
+<!--
+INDEPENDENT_INTERACTIVE_COGNITIVE_AGE_BENCHMARK — task planning_age10_v1
+NOT ChildAgentEval. Original content authored for this project. No WISC-derived material.
+-->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>planning_age10_v1</title>
+<style>
+  body { font-family: sans-serif; padding: 1.5em; }
+  .target, .choice { display: inline-block; margin: 0.4em; padding: 0.6em 1em;
+                       border: 1px solid #888; cursor: pointer; }
+  #finish_button { margin-top: 1.5em; }
+  #status { margin-top: 1em; font-weight: bold; }
+</style>
+</head>
+<body>
+  <p id="instructions">To plant a seed you must: dig a hole, place the seed, cover with soil, then water it. One button is a distractor and not needed. Click only the needed steps in the correct order, then click Finish.</p>
+  <div id="stimulus"><p>Sequence to remember: </p></div>
+  <div id="interactive_area"><button class="target" id="step_dig_hole" type="button">Dig a hole</button>
+<button class="target" id="step_place_seed" type="button">Place the seed</button>
+<button class="target" id="step_cover_soil" type="button">Cover with soil</button>
+<button class="target" id="step_water" type="button">Water it</button>
+<button class="target" id="step_paint_pot" type="button">Paint the pot (distractor)</button></div>
+  <button id="finish_button" type="button">Finish</button>
+  <div id="status" data-state="not_started">not_started</div>
+  <script>
+    const status = document.getElementById("status");
+    document.querySelectorAll(".target, .choice").forEach((el) => {
+      el.addEventListener("click", () => {
+        status.dataset.state = "in_progress";
+        status.textContent = "in_progress";
+      });
+    });
+    document.getElementById("finish_button").addEventListener("click", () => {
+      status.dataset.state = "completed";
+      status.textContent = "completed";
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+{
+  "task_id": "visual_spatial_age13_v1",
+  "category": "visual_spatial",
+  "dimension": "visual_spatial",
+  "target_age": 13,
+  "difficulty": "hard",
+  "version": "v1",
+  "instructions": "A square has its top-left corner marked. If the square is rotated 90 degrees counter-clockwise, then flipped horizontally, where is the marked corner now? Click your answer, then click Finish.",
+  "interaction_kind": "multiple_choice",
+  "stimulus": {"prompt": "Marked corner: top-left. Rotate 90° counter-clockwise, then flip horizontally. New corner?"},
+  "choices": [
+    {"id": "choice_a", "label": "top-left"},
+    {"id": "choice_b", "label": "top-right"},
+    {"id": "choice_c", "label": "bottom-left"},
+    {"id": "choice_d", "label": "bottom-right"}
+  ],
+  "available_actions": ["click", "finish"],
+  "success_condition": {"type": "single_choice", "correct_choice_id": "choice_d"},
+  "failure_condition": {"type": "wrong_choice_or_incomplete"},
+  "maximum_steps": 4,
+  "scoring_rule": {"type": "binary", "correct": 1.0, "incorrect": 0.0}
+}

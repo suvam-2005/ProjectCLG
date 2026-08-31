@@ -38,6 +38,18 @@ def test_rejects_json_that_is_not_an_object():
         parse_action(json.dumps(["click", "btn_1"]))
 
 
+def test_rejects_bare_json_integer():
+    # Regression: observed in the Phase 5C pilot — the model occasionally emits just
+    # "5" (or a long degenerate digit string) instead of an action object.
+    with pytest.raises(ActionValidationError, match="expected a JSON object, got int"):
+        parse_action("5")
+
+
+def test_rejects_bare_json_string():
+    with pytest.raises(ActionValidationError, match="expected a JSON object, got str"):
+        parse_action('"5"')
+
+
 def test_rejects_unknown_action_type():
     with pytest.raises(ActionValidationError):
         parse_action(json.dumps({"action": "teleport", "target": "btn_1"}))

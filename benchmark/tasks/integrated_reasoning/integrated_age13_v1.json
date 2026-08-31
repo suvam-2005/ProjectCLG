@@ -1,0 +1,21 @@
+{
+  "task_id": "integrated_age13_v1",
+  "category": "integrated_reasoning",
+  "dimension": "integrated_reasoning",
+  "target_age": 13,
+  "difficulty": "hard",
+  "version": "v1",
+  "instructions": "Three friends, Alex, Bo, and Cam, are standing in a line. Alex is not first. Cam is not last. Bo is not in the middle. Bo is not last. Click who is first in line, then click Finish.",
+  "interaction_kind": "multiple_choice",
+  "stimulus": {"prompt": "Alex is not first. Cam is not last. Bo is not in the middle. Bo is not last. Who is first?"},
+  "choices": [
+    {"id": "choice_a", "label": "Alex"},
+    {"id": "choice_b", "label": "Bo"},
+    {"id": "choice_c", "label": "Cam"}
+  ],
+  "available_actions": ["click", "finish"],
+  "success_condition": {"type": "single_choice", "correct_choice_id": "choice_b"},
+  "failure_condition": {"type": "wrong_choice_or_incomplete"},
+  "maximum_steps": 4,
+  "scoring_rule": {"type": "binary", "correct": 1.0, "incorrect": 0.0}
+}

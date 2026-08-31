@@ -197,6 +197,38 @@ def rank_correlation(xs: Sequence[float], ys: Sequence[float]) -> RankCorrelatio
 
 
 @dataclass
+class TTestResult:
+    n1: int
+    n2: int
+    statistic: float | None
+    p_value_two_tailed: float | None
+    method: str
+
+
+def _normal_cdf(z: float) -> float:
+    return 0.5 * (1.0 + math.erf(z / math.sqrt(2)))
+
+
+def welch_t_test(sample1: Sequence[float], sample2: Sequence[float]) -> TTestResult:
+    """Welch's t-test with a NORMAL-APPROXIMATION p-value (not the exact Student's-t
+    distribution, which needs a special function this project avoids depending on
+    numpy/scipy for). Adequate for the "is this compatible at all" question this
+    project uses it for; not a substitute for a proper stats package in a publication.
+    Returns None fields when there isn't enough data to compute a statistic."""
+    n1, n2 = len(sample1), len(sample2)
+    if n1 < 2 or n2 < 2:
+        return TTestResult(n1=n1, n2=n2, statistic=None, p_value_two_tailed=None, method="welch_normal_approx")
+    m1, m2 = statistics.mean(sample1), statistics.mean(sample2)
+    v1, v2 = statistics.variance(sample1), statistics.variance(sample2)
+    se = math.sqrt(v1 / n1 + v2 / n2)
+    if se == 0:
+        return TTestResult(n1=n1, n2=n2, statistic=None, p_value_two_tailed=None, method="welch_normal_approx")
+    t_stat = (m1 - m2) / se
+    p_value = 2 * (1 - _normal_cdf(abs(t_stat)))
+    return TTestResult(n1=n1, n2=n2, statistic=t_stat, p_value_two_tailed=p_value, method="welch_normal_approx")
+
+
+@dataclass
 class MultipleComparisonResult:
     n_comparisons: int
     method: str

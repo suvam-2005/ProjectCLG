@@ -1,0 +1,22 @@
+# Independent Interactive Cognitive-Age Benchmark — experiment configuration.
+# NOT ChildAgentEval. Never edit run parameters in source — change them here.
+
+run_id: independent_benchmark_v1
+
+model: qwen/qwen3.5-27b
+temperature: 0
+max_output_tokens: 256
+
+benchmark:
+  tasks_dir: ../benchmark/tasks
+  pages_dir: ../benchmark/pages
+
+budget:
+  benchmark_hard_limit_usd: 8.00
+  benchmark_soft_limit_usd: 6.50
+  project_hard_limit_usd: 10.00
+  project_soft_limit_usd: 9.00
+  max_api_calls: 4000
+  max_output_tokens_per_call: 256
+
+max_steps_per_task: 9

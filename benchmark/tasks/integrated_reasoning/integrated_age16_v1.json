@@ -1,0 +1,23 @@
+{
+  "task_id": "integrated_age16_v1",
+  "category": "integrated_reasoning",
+  "dimension": "integrated_reasoning",
+  "target_age": 16,
+  "difficulty": "very_hard",
+  "version": "v1",
+  "instructions": "A tank fills at 5 liters/minute from pipe A and 3 liters/minute from pipe B, both open together. It drains at 4 liters/minute when the drain is open. If all three (A, B, drain) are open together, how many minutes to fill an empty 32-liter tank? Click your answer, then click Finish.",
+  "interaction_kind": "multiple_choice",
+  "stimulus": {"prompt": "Fill rate: +5+3 L/min, drain: -4 L/min, all open together. Empty tank = 32 L. Minutes to fill?"},
+  "choices": [
+    {"id": "choice_a", "label": "4"},
+    {"id": "choice_b", "label": "6"},
+    {"id": "choice_c", "label": "8"},
+    {"id": "choice_d", "label": "10"},
+    {"id": "choice_e", "label": "16"}
+  ],
+  "available_actions": ["click", "finish"],
+  "success_condition": {"type": "single_choice", "correct_choice_id": "choice_c"},
+  "failure_condition": {"type": "wrong_choice_or_incomplete"},
+  "maximum_steps": 4,
+  "scoring_rule": {"type": "binary", "correct": 1.0, "incorrect": 0.0}
+}

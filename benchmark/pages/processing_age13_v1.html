@@ -1,0 +1,42 @@
+<!--
+INDEPENDENT_INTERACTIVE_COGNITIVE_AGE_BENCHMARK — task processing_age13_v1
+NOT ChildAgentEval. Original content authored for this project. No WISC-derived material.
+-->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>processing_age13_v1</title>
+<style>
+  body { font-family: sans-serif; padding: 1.5em; }
+  .target, .choice { display: inline-block; margin: 0.4em; padding: 0.6em 1em;
+                       border: 1px solid #888; cursor: pointer; }
+  #finish_button { margin-top: 1.5em; }
+  #status { margin-top: 1em; font-weight: bold; }
+</style>
+</head>
+<body>
+  <p id="instructions">Click the choice that exactly matches the target symbol: xT7q, then click Finish. Some choices differ by only one character.</p>
+  <div id="stimulus"><p>Target symbol: xT7q</p></div>
+  <div id="interactive_area"><button class="choice" id="choice_a" type="button">xT7q</button>
+<button class="choice" id="choice_b" type="button">xT7g</button>
+<button class="choice" id="choice_c" type="button">xT1q</button>
+<button class="choice" id="choice_d" type="button">xt7q</button>
+<button class="choice" id="choice_e" type="button">xT7Q</button></div>
+  <button id="finish_button" type="button">Finish</button>
+  <div id="status" data-state="not_started">not_started</div>
+  <script>
+    const status = document.getElementById("status");
+    document.querySelectorAll(".target, .choice").forEach((el) => {
+      el.addEventListener("click", () => {
+        status.dataset.state = "in_progress";
+        status.textContent = "in_progress";
+      });
+    });
+    document.getElementById("finish_button").addEventListener("click", () => {
+      status.dataset.state = "completed";
+      status.textContent = "completed";
+    });
+  </script>
+</body>
+</html>

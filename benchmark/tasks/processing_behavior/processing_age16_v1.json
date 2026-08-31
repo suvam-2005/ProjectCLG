@@ -1,0 +1,24 @@
+{
+  "task_id": "processing_age16_v1",
+  "category": "processing_behavior",
+  "dimension": "processing_behavior",
+  "target_age": 16,
+  "difficulty": "very_hard",
+  "version": "v1",
+  "instructions": "Click the choice that exactly matches the target symbol: qP93zK, then click Finish. Several choices differ by only one character.",
+  "interaction_kind": "multiple_choice",
+  "stimulus": {"prompt": "Target symbol: qP93zK"},
+  "choices": [
+    {"id": "choice_a", "label": "qP93zK"},
+    {"id": "choice_b", "label": "qP93zk"},
+    {"id": "choice_c", "label": "qP98zK"},
+    {"id": "choice_d", "label": "qP93zK "},
+    {"id": "choice_e", "label": "qР93zK"},
+    {"id": "choice_f", "label": "Qp93zK"}
+  ],
+  "available_actions": ["click", "finish"],
+  "success_condition": {"type": "single_choice", "correct_choice_id": "choice_a"},
+  "failure_condition": {"type": "wrong_choice_or_incomplete"},
+  "maximum_steps": 4,
+  "scoring_rule": {"type": "binary", "correct": 1.0, "incorrect": 0.0}
+}

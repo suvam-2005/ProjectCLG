@@ -1,0 +1,22 @@
+{
+  "task_id": "visual_spatial_age10_v1",
+  "category": "visual_spatial",
+  "dimension": "visual_spatial",
+  "target_age": 10,
+  "difficulty": "medium",
+  "version": "v1",
+  "instructions": "An arrow points RIGHT. Rotate it 180 degrees, then rotate the result 90 degrees clockwise. Click the final direction, then click Finish.",
+  "interaction_kind": "multiple_choice",
+  "stimulus": {"prompt": "Arrow starts pointing RIGHT (→). Rotate 180°, then rotate 90° clockwise. Final direction?"},
+  "choices": [
+    {"id": "choice_a", "label": "Up (↑)"},
+    {"id": "choice_b", "label": "Down (↓)"},
+    {"id": "choice_c", "label": "Left (←)"},
+    {"id": "choice_d", "label": "Right (→)"}
+  ],
+  "available_actions": ["click", "finish"],
+  "success_condition": {"type": "single_choice", "correct_choice_id": "choice_a"},
+  "failure_condition": {"type": "wrong_choice_or_incomplete"},
+  "maximum_steps": 4,
+  "scoring_rule": {"type": "binary", "correct": 1.0, "incorrect": 0.0}
+}

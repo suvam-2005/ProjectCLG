@@ -1,0 +1,23 @@
+{
+  "task_id": "visual_spatial_age16_v1",
+  "category": "visual_spatial",
+  "dimension": "visual_spatial",
+  "target_age": 16,
+  "difficulty": "very_hard",
+  "version": "v1",
+  "instructions": "A point starts at coordinates (2, 3) on a grid where x increases rightward and y increases upward. First reflect the point across the x-axis, then translate it by (+1, -2). Click the resulting coordinates, then click Finish.",
+  "interaction_kind": "multiple_choice",
+  "stimulus": {"prompt": "Start: (2, 3). Reflect across x-axis, then translate by (+1, -2). Final coordinates?"},
+  "choices": [
+    {"id": "choice_a", "label": "(3, -5)"},
+    {"id": "choice_b", "label": "(3, 5)"},
+    {"id": "choice_c", "label": "(1, -5)"},
+    {"id": "choice_d", "label": "(3, -1)"},
+    {"id": "choice_e", "label": "(2, -5)"}
+  ],
+  "available_actions": ["click", "finish"],
+  "success_condition": {"type": "single_choice", "correct_choice_id": "choice_a"},
+  "failure_condition": {"type": "wrong_choice_or_incomplete"},
+  "maximum_steps": 4,
+  "scoring_rule": {"type": "binary", "correct": 1.0, "incorrect": 0.0}
+}

@@ -1,0 +1,23 @@
+{
+  "task_id": "language_age16_v1",
+  "category": "language",
+  "dimension": "language",
+  "target_age": 16,
+  "difficulty": "very_hard",
+  "version": "v1",
+  "instructions": "Click the word that best completes the sentence given its context, then click Finish.",
+  "interaction_kind": "multiple_choice",
+  "stimulus": {"prompt": "Despite the overwhelming evidence, the committee remained ___ about the proposal's feasibility."},
+  "choices": [
+    {"id": "choice_a", "label": "convinced"},
+    {"id": "choice_b", "label": "skeptical"},
+    {"id": "choice_c", "label": "enthusiastic"},
+    {"id": "choice_d", "label": "indifferent"},
+    {"id": "choice_e", "label": "supportive"}
+  ],
+  "available_actions": ["click", "finish"],
+  "success_condition": {"type": "single_choice", "correct_choice_id": "choice_b"},
+  "failure_condition": {"type": "wrong_choice_or_incomplete"},
+  "maximum_steps": 4,
+  "scoring_rule": {"type": "binary", "correct": 1.0, "incorrect": 0.0}
+}

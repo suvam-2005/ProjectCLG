@@ -1,0 +1,38 @@
+{
+  "L0": {
+    "n_tasks": 32,
+    "n_unique_task_ids": 32,
+    "has_duplicates": false,
+    "missing_required_fields": 0,
+    "negative_tokens": 0,
+    "negative_cost": 0,
+    "impossible_scores": 0
+  },
+  "L1": {
+    "n_tasks": 32,
+    "n_unique_task_ids": 32,
+    "has_duplicates": false,
+    "missing_required_fields": 0,
+    "negative_tokens": 0,
+    "negative_cost": 0,
+    "impossible_scores": 0
+  },
+  "L2": {
+    "n_tasks": 32,
+    "n_unique_task_ids": 32,
+    "has_duplicates": false,
+    "missing_required_fields": 0,
+    "negative_tokens": 0,
+    "negative_cost": 0,
+    "impossible_scores": 0
+  },
+  "L3": {
+    "n_tasks": 32,
+    "n_unique_task_ids": 32,
+    "has_duplicates": false,
+    "missing_required_fields": 0,
+    "negative_tokens": 0,
+    "negative_cost": 0,
+    "impossible_scores": 0
+  }
+}

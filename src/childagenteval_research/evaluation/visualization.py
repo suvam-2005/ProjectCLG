@@ -25,13 +25,47 @@ def _line_or_scatter(x, y, xlabel: str, ylabel: str, title: str, is_synthetic: b
     return fig
 
 
-def _bar(labels, values, xlabel: str, ylabel: str, title: str, is_synthetic: bool) -> Figure:
+def _bar(labels, values, xlabel: str, ylabel: str, title: str, is_synthetic: bool, yerr=None) -> Figure:
     fig = Figure(figsize=(6, 4))
     ax = fig.add_subplot(111)
-    ax.bar([str(l) for l in labels], values)
+    ax.bar([str(l) for l in labels], values, yerr=yerr, capsize=4 if yerr is not None else 0)
     ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)
     ax.set_title(_label(title, is_synthetic))
+    return fig
+
+
+def _multi_line(x, series: dict, xlabel: str, ylabel: str, title: str, is_synthetic: bool) -> Figure:
+    """series: {label: y_values}, all aligned to the same x."""
+    fig = Figure(figsize=(6, 4))
+    ax = fig.add_subplot(111)
+    for label, y in series.items():
+        ax.plot(x, y, marker="o", label=label)
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+    ax.set_title(_label(title, is_synthetic))
+    ax.legend()
+    return fig
+
+
+def _grouped_bar(categories, series: dict, xlabel: str, ylabel: str, title: str, is_synthetic: bool) -> Figure:
+    """series: {label: values-per-category}, all aligned to the same categories list."""
+    import numpy as np
+
+    fig = Figure(figsize=(8, 4))
+    ax = fig.add_subplot(111)
+    n_series = len(series)
+    width = 0.8 / n_series
+    x = np.arange(len(categories))
+    for i, (label, values) in enumerate(series.items()):
+        ax.bar(x + i * width - 0.4 + width / 2, values, width, label=label)
+    ax.set_xticks(x)
+    ax.set_xticklabels(categories, rotation=30, ha="right")
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+    ax.set_title(_label(title, is_synthetic))
+    ax.legend()
+    fig.tight_layout()
     return fig
 
 
@@ -43,12 +77,20 @@ def plot_age_vs_performance(ages, performance_scores, *, is_synthetic: bool, tit
     return _line_or_scatter(ages, performance_scores, "Target age", "Task performance", title, is_synthetic)
 
 
-def plot_guardrail_vs_alignment(conditions, alignment_scores, *, is_synthetic: bool, title: str = "Guardrail Level vs Alignment") -> Figure:
-    return _bar(conditions, alignment_scores, "Condition", "Alignment score", title, is_synthetic)
+def plot_guardrail_vs_alignment(conditions, alignment_scores, *, is_synthetic: bool, title: str = "Guardrail Level vs Alignment", yerr=None) -> Figure:
+    return _bar(conditions, alignment_scores, "Condition", "Alignment score", title, is_synthetic, yerr=yerr)
 
 
-def plot_guardrail_vs_capability_retention(conditions, retention_scores, *, is_synthetic: bool, title: str = "Guardrail Level vs Capability Retention") -> Figure:
-    return _bar(conditions, retention_scores, "Condition", "Capability retention", title, is_synthetic)
+def plot_guardrail_vs_capability_retention(conditions, retention_scores, *, is_synthetic: bool, title: str = "Guardrail Level vs Capability Retention", yerr=None) -> Figure:
+    return _bar(conditions, retention_scores, "Condition", "Capability retention", title, is_synthetic, yerr=yerr)
+
+
+def plot_multi_series_by_age(ages, series: dict, ylabel: str, *, is_synthetic: bool, title: str) -> Figure:
+    return _multi_line(ages, series, "Target age", ylabel, title, is_synthetic)
+
+
+def plot_per_category_grouped(categories, series: dict, *, is_synthetic: bool, title: str = "Per-Category Performance") -> Figure:
+    return _grouped_bar(categories, series, "Category", "Accuracy", title, is_synthetic)
 
 
 def plot_alignment_capability_pareto(alignment_scores, capability_scores, labels, *, is_synthetic: bool, title: str = "Alignment-Capability Pareto Frontier") -> Figure:

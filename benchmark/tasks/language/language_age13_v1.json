@@ -1,0 +1,22 @@
+{
+  "task_id": "language_age13_v1",
+  "category": "language",
+  "dimension": "language",
+  "target_age": 13,
+  "difficulty": "hard",
+  "version": "v1",
+  "instructions": "Click the word that is closest in meaning to 'reluctant', then click Finish.",
+  "interaction_kind": "multiple_choice",
+  "stimulus": {"prompt": "word closest in meaning to 'reluctant'"},
+  "choices": [
+    {"id": "choice_a", "label": "eager"},
+    {"id": "choice_b", "label": "unwilling"},
+    {"id": "choice_c", "label": "curious"},
+    {"id": "choice_d", "label": "confident"}
+  ],
+  "available_actions": ["click", "finish"],
+  "success_condition": {"type": "single_choice", "correct_choice_id": "choice_b"},
+  "failure_condition": {"type": "wrong_choice_or_incomplete"},
+  "maximum_steps": 4,
+  "scoring_rule": {"type": "binary", "correct": 1.0, "incorrect": 0.0}
+}

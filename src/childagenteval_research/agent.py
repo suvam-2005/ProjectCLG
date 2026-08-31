@@ -48,6 +48,7 @@ class Agent:
         prompt_builder: PromptBuilder,
         max_output_tokens: int,
         provider: str = "openrouter",
+        extra_request_params: dict | None = None,
     ) -> None:
         self.model_client = model_client
         self.telemetry_writer = telemetry_writer
@@ -57,6 +58,7 @@ class Agent:
         self.provider = provider
         self.prompt_builder = prompt_builder
         self.max_output_tokens = max_output_tokens
+        self.extra_request_params = extra_request_params
         self.task: TaskSpec | None = None
 
     def initialize(self, task: TaskSpec) -> None:
@@ -70,20 +72,26 @@ class Agent:
     def decide(self, observation: Observation) -> DecisionResult:
         assert self.task is not None, "Agent.initialize(task) must be called before decide()"
         messages = self.prompt_builder(self.task, observation)
-        result = self.model_client.chat(self.task.task_id, messages, max_tokens=self.max_output_tokens)
+        result = self.model_client.chat(
+            self.task.task_id, messages, max_tokens=self.max_output_tokens, extra=self.extra_request_params
+        )
+        # A provider can return null content (e.g. the completion budget was entirely
+        # consumed by hidden reasoning tokens, leaving nothing visible) — normalize to
+        # "" so this is handled as ordinary malformed output, not a crash.
+        content = result["content"] or ""
 
         error: str | None = None
         recovery: str | None = None
         try:
-            action = parse_action(result["content"])
+            action = parse_action(content)
         except ActionValidationError as e:
             error = str(e)
             recovery = "applied fixed no-op(wait) recovery action; model was not re-queried"
-            action = make_recovery_action(reason=error, raw_model_output=result["content"])
+            action = make_recovery_action(reason=error, raw_model_output=content)
 
         return DecisionResult(
             proposed_action=action,
-            raw_model_output=result["content"],
+            raw_model_output=content,
             input_tokens=result["input_tokens"],
             output_tokens=result["output_tokens"],
             latency_s=result["latency_s"],
@@ -122,6 +130,10 @@ class Agent:
             action={
                 "proposed": decision.proposed_action.to_dict(),
                 "guardrail_decision": guardrail_result.decision.value,
+                "guardrail_intervention_type": guardrail_result.intervention_type,
+                "guardrail_reason": guardrail_result.reason,
+                "guardrail_confidence": guardrail_result.confidence,
+                "guardrail_metadata": guardrail_result.metadata,
                 "final": final_action.to_dict(),
             },
             action_result={
@@ -189,7 +201,15 @@ def run_episode(
 
         decision = agent.decide(observation)
         guardrail_result = guardrail.evaluate(
-            context={"task": task, "observation": observation, "proposed_action": decision.proposed_action}
+            context={
+                "task": task,
+                "observation": observation,
+                "proposed_action": decision.proposed_action,
+                "raw_model_output": decision.raw_model_output,
+                "decision_error": decision.error,
+                "step_number": step,
+                "history": list(records),  # records completed so far this episode, oldest first
+            }
         )
         final_action = apply_guardrail(decision.proposed_action, guardrail_result)
 

@@ -18,7 +18,12 @@ ACTION_SCHEMA_INSTRUCTIONS = (
     "Respond with exactly one JSON object describing your next action, and nothing "
     f"else — no explanation, no reasoning. The \"action\" field must be one of: "
     f"{sorted(VALID_ACTION_TYPES)}. Include only the fields relevant to that action "
-    "(e.g. \"target\" for click; \"target\" and \"text\" for type)."
+    "(e.g. \"target\" for click; \"target\" and \"text\" for type). "
+    "Your entire response must be a single JSON OBJECT starting with '{' and ending "
+    "with '}' — never a bare number, a bare string, or a JSON array. For example, to "
+    "click an element: {\"action\": \"click\", \"target\": \"#choice_a\"}. Do not "
+    "respond with just a number or letter, even if the on-screen choice is labeled "
+    "with one — always wrap it in the JSON object shown above."
 )
 
 

@@ -1,0 +1,25 @@
+{
+  "task_id": "wm_age10_v1",
+  "category": "working_memory",
+  "dimension": "working_memory",
+  "target_age": 10,
+  "difficulty": "medium",
+  "version": "v1",
+  "instructions": "Remember the order of shapes listed below. Click the shape buttons in that exact order, then click Finish.",
+  "interaction_kind": "sequence_click",
+  "stimulus": {
+    "sequence_display": ["square", "star", "circle", "triangle"],
+    "targets": [
+      {"id": "target_circle", "label": "Circle"},
+      {"id": "target_square", "label": "Square"},
+      {"id": "target_triangle", "label": "Triangle"},
+      {"id": "target_star", "label": "Star"},
+      {"id": "target_hexagon", "label": "Hexagon"}
+    ]
+  },
+  "available_actions": ["click", "finish"],
+  "success_condition": {"type": "exact_sequence", "expected_target_order": ["target_square", "target_star", "target_circle", "target_triangle"]},
+  "failure_condition": {"type": "wrong_sequence_or_incomplete"},
+  "maximum_steps": 7,
+  "scoring_rule": {"type": "binary", "correct": 1.0, "incorrect": 0.0}
+}

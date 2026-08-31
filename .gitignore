@@ -12,3 +12,14 @@ results/
 trajectories/
 logs/
 *.log
+
+# IDE / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Python build artifacts
+dist/
+build/
+.ipynb_checkpoints/

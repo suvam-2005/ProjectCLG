@@ -1,0 +1,23 @@
+{
+  "task_id": "reasoning_age16_v1",
+  "category": "reasoning",
+  "dimension": "reasoning",
+  "target_age": 16,
+  "difficulty": "very_hard",
+  "version": "v1",
+  "instructions": "Each number is the sum of the previous two numbers, minus 2. Click the choice that continues the pattern, then click Finish.",
+  "interaction_kind": "multiple_choice",
+  "stimulus": {"prompt": "2, 3, 3, 4, 5, 7, ?"},
+  "choices": [
+    {"id": "choice_a", "label": "9"},
+    {"id": "choice_b", "label": "10"},
+    {"id": "choice_c", "label": "11"},
+    {"id": "choice_d", "label": "12"},
+    {"id": "choice_e", "label": "14"}
+  ],
+  "available_actions": ["click", "finish"],
+  "success_condition": {"type": "single_choice", "correct_choice_id": "choice_b"},
+  "failure_condition": {"type": "wrong_choice_or_incomplete"},
+  "maximum_steps": 4,
+  "scoring_rule": {"type": "binary", "correct": 1.0, "incorrect": 0.0}
+}

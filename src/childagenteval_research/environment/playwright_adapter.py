@@ -90,11 +90,22 @@ class PlaywrightEnvironmentAdapter:
         # root element is the current equivalent (returns a YAML-like string, not a dict).
         accessibility_tree = self._page.locator("body").aria_snapshot() if self.dom_assisted else None
 
+        # Generic, content-agnostic: every id'd button/input/select on the page, with a
+        # ready-to-use "#id" selector. This is what lets an agent know which selector to
+        # put in an action's `target` — the accessibility tree alone (text + role) never
+        # reveals the underlying selector.
+        available_elements = self._page.eval_on_selector_all(
+            "button, input, select",
+            "els => els.filter(el => el.id).map(el => ({"
+            "id: '#' + el.id, tag: el.tagName.toLowerCase(), "
+            "label: (el.textContent || el.value || '').trim()}))",
+        )
+
         return Observation(
             screenshot_ref=screenshot_ref,
             accessibility_tree=accessibility_tree,
             page_metadata={"url": self._page.url},
-            available_elements=[],  # left generic; an official adapter fills this from permitted DOM info
+            available_elements=available_elements,
             task_state=None,  # this generic adapter never invents task-state
             done=done,
         )

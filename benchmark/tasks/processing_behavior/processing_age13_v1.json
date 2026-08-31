@@ -1,0 +1,23 @@
+{
+  "task_id": "processing_age13_v1",
+  "category": "processing_behavior",
+  "dimension": "processing_behavior",
+  "target_age": 13,
+  "difficulty": "hard",
+  "version": "v1",
+  "instructions": "Click the choice that exactly matches the target symbol: xT7q, then click Finish. Some choices differ by only one character.",
+  "interaction_kind": "multiple_choice",
+  "stimulus": {"prompt": "Target symbol: xT7q"},
+  "choices": [
+    {"id": "choice_a", "label": "xT7q"},
+    {"id": "choice_b", "label": "xT7g"},
+    {"id": "choice_c", "label": "xT1q"},
+    {"id": "choice_d", "label": "xt7q"},
+    {"id": "choice_e", "label": "xT7Q"}
+  ],
+  "available_actions": ["click", "finish"],
+  "success_condition": {"type": "single_choice", "correct_choice_id": "choice_a"},
+  "failure_condition": {"type": "wrong_choice_or_incomplete"},
+  "maximum_steps": 4,
+  "scoring_rule": {"type": "binary", "correct": 1.0, "incorrect": 0.0}
+}

@@ -1,0 +1,30 @@
+[
+  {
+    "age": 7,
+    "reference_qwen": 0.32,
+    "our_l0": 0.625,
+    "difference": 0.305,
+    "note": "metrics are not assumed equivalent \u2014 different scoring systems"
+  },
+  {
+    "age": 10,
+    "reference_qwen": 0.34,
+    "our_l0": 0.5,
+    "difference": 0.15999999999999998,
+    "note": "metrics are not assumed equivalent \u2014 different scoring systems"
+  },
+  {
+    "age": 13,
+    "reference_qwen": 0.29,
+    "our_l0": 0.5,
+    "difference": 0.21000000000000002,
+    "note": "metrics are not assumed equivalent \u2014 different scoring systems"
+  },
+  {
+    "age": 16,
+    "reference_qwen": 0.3,
+    "our_l0": 0.625,
+    "difference": 0.325,
+    "note": "metrics are not assumed equivalent \u2014 different scoring systems"
+  }
+]

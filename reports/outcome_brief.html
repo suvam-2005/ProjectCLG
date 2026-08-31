@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Can Cognitive Guardrails Change AI Behavior?</title>
+<style>
+  :root {
+    --bg: #f4f5f7;
+    --page-bg: #ffffff;
+    --ink: #1c1f24;
+    --sub: #55606b;
+    --accent: #2e9e6b;
+    --accent2: #4c8bf5;
+    --warn: #e05a4e;
+    --border: #e4e7eb;
+    --tag-ref: #8a8f98;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+  }
+  header.hero {
+    padding: 64px 24px 40px;
+    text-align: center;
+    background: linear-gradient(180deg, #10141c 0%, #232a36 100%);
+    color: white;
+  }
+  header.hero h1 {
+    font-size: 2.4rem;
+    margin: 0 0 8px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+  header.hero h2 {
+    font-size: 1.2rem;
+    font-weight: 400;
+    color: #cfd6de;
+    margin: 0 0 20px;
+  }
+  header.hero .note {
+    max-width: 720px;
+    margin: 0 auto;
+    font-size: 0.92rem;
+    color: #9aa5b1;
+    border-top: 1px solid #333c48;
+    padding-top: 18px;
+  }
+  header.hero .note b { color: #e8ecf0; }
+
+  main { max-width: 900px; margin: 0 auto; padding: 32px 16px 80px; }
+
+  section.page {
+    background: var(--page-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 36px 40px;
+    margin-bottom: 28px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  section.page .pagenum {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--sub);
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  section.page h2.title {
+    font-size: 1.5rem;
+    margin: 0 0 18px;
+    font-weight: 800;
+  }
+  section.page h3.headline {
+    font-size: 1.25rem;
+    margin: 20px 0 10px;
+    font-weight: 800;
+    color: var(--accent);
+  }
+  section.page p { color: #333; font-size: 1.02rem; }
+  section.page ul, section.page ol { color: #333; font-size: 1rem; }
+
+  .diagram {
+    background: #f7f9fb;
+    border: 1px dashed #c6ccd3;
+    border-radius: 10px;
+    padding: 18px;
+    font-family: "Cascadia Code", Consolas, monospace;
+    font-size: 0.85rem;
+    color: #333;
+    overflow-x: auto;
+    white-space: pre;
+    margin: 16px 0;
+  }
+
+  table.levels {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 0.95rem;
+  }
+  table.levels th, table.levels td {
+    border: 1px solid var(--border);
+    padding: 10px 12px;
+    text-align: left;
+    vertical-align: top;
+  }
+  table.levels th { background: #f7f9fb; font-weight: 700; }
+  table.levels tr:nth-child(odd) td { background: #fbfcfd; }
+
+  figure { margin: 20px 0; text-align: center; }
+  figure img {
+    max-width: 100%;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+  }
+  figure figcaption {
+    font-size: 0.85rem;
+    color: var(--sub);
+    margin-top: 8px;
+  }
+
+  .tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 5px;
+    margin-right: 6px;
+  }
+  .tag.ref { background: #eceef1; color: var(--tag-ref); }
+  .tag.hyp { background: #fff3e0; color: #a06400; }
+  .tag.our { background: #e7f6ee; color: #1d7a4c; }
+
+  .callout {
+    border-left: 4px solid var(--accent2);
+    background: #f2f7ff;
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin: 16px 0;
+    font-size: 0.95rem;
+  }
+  .callout.warn { border-left-color: var(--warn); background: #fdf1f0; }
+
+  .definition {
+    background: #f7f9fb;
+    border-radius: 8px;
+    padding: 10px 16px;
+    margin: 12px 0;
+    font-size: 0.92rem;
+    border: 1px solid var(--border);
+  }
+  .definition b { color: var(--accent2); }
+
+  footer {
+    text-align: center;
+    color: var(--sub);
+    font-size: 0.85rem;
+    padding: 20px;
+  }
+
+  @media print {
+    body { background: white; }
+    section.page { break-inside: avoid; box-shadow: none; border: none; page-break-after: always; }
+    header.hero { break-after: page; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <h1>Can Cognitive Guardrails Change AI Behavior?</h1>
+  <h2>An Experimental Study with Qwen3.5-27B</h2>
+  <p class="note">
+    This is an <b>independent, original benchmark</b> inspired by the publicly described
+    research direction of the ChildAgentEval paper. It is <b>not a reproduction of
+    ChildAgentEval</b> — the official benchmark's tasks and scoring were never released
+    publicly, so this study built its own, separately-labeled 32-task benchmark instead.
+    Wherever this document shows a number from the original paper, it is marked
+    <b>REFERENCE PAPER RESULT</b>.
+  </p>
+</header>
+
+<main>
+
+<section class="page">
+  <div class="pagenum">Page 2</div>
+  <h2 class="title">The Research Question</h2>
+  <p><b>Do supervision systems ("guardrails") change what an AI agent actually does, or
+  only how it gets there?</b></p>
+  <div class="diagram">   AI Agent  --works on-->  Task  --produces-->  Behavior
+                                                      |
+                                      Guardrail watches / intervenes
+                                                      |
+                                                      v
+                                                   Outcome</div>
+  <p>We gave an AI model 32 tasks, four different levels of supervision, and measured
+  what changed: <b>the answers it gave</b>, and <b>the path it took to get there</b>.</p>
+</section>
+
+<section class="page">
+  <div class="pagenum">Page 3</div>
+  <h2 class="title">Why This Matters</h2>
+  <p>AI agents are increasingly given autonomy to click buttons, fill forms, and complete
+  multi-step tasks with limited direct human oversight. A natural question follows: if
+  you add a supervision layer that checks the agent's outputs, its actions, or its
+  overall behavior, does the agent actually perform better — or does it just look more
+  supervised?</p>
+  <p>This matters for anyone deploying AI agents in situations where correctness matters
+  (education, customer support, task automation) and where "we added safety checks" is
+  often assumed, without being measured, to also mean "the agent got better."</p>
+  <div class="callout">This study measures it directly, on one model, on one benchmark,
+  under controlled conditions — a first data point, not a final answer.</div>
+</section>
+
+<section class="page">
+  <div class="pagenum">Page 4</div>
+  <h2 class="title">What We Built</h2>
+  <div class="diagram"> Qwen3.5-27B  -->  Browser (Playwright)  -->  32 original tasks
+                                                       |
+                                         L0 / L1 / L2 / L3 guardrail layer
+                                                       |
+                                                       v
+                                      Accuracy + Alignment + Cost + Steps</div>
+  <ul>
+    <li><b>Model:</b> Qwen3.5-27B, accessed via OpenRouter, same settings every run
+      (temperature 0, deterministic decoding).</li>
+    <li><b>Environment:</b> a real Chromium browser (Playwright), driven step-by-step by
+      the model through generic click/type/select actions — the same way a human would
+      use a web page.</li>
+    <li><b>Benchmark:</b> 32 original tasks we designed ourselves, spanning 8 cognitive
+      categories (working memory, reasoning, abstraction, language, visual-spatial,
+      planning, processing behavior, integrated reasoning) at 4 target ages (7, 10, 13,
+      16) — 1 task per category per age.</li>
+    <li><b>Guardrails:</b> four supervision conditions, described next.</li>
+    <li><b>Measurement pipeline:</b> every step, every guardrail decision, every token,
+      and every dollar spent was logged automatically and scored after the fact.</li>
+  </ul>
+</section>
+
+<section class="page">
+  <div class="pagenum">Page 5</div>
+  <h2 class="title">What Are L0, L1, L2, L3?</h2>
+  <p>Think of it as increasing levels of a supervisor watching someone do a job:</p>
+  <table class="levels">
+    <tr><th>Level</th><th>Analogy</th><th>What it actually checks</th></tr>
+    <tr><td><b>L0</b></td><td>No supervisor</td><td>Nothing. The agent works alone.</td></tr>
+    <tr><td><b>L1</b></td><td>Answer checker</td><td>Rejects malformed / broken output <i>format</i>, before it's used.</td></tr>
+    <tr><td><b>L2</b></td><td>Action checker</td><td>Rejects invalid or clearly premature <i>actions</i> (e.g., giving up on step 1).</td></tr>
+    <tr><td><b>L3</b></td><td>Process supervisor</td><td>Watches the <i>whole trajectory</i> — steps back in if the agent stalls, loops, or repeats itself.</td></tr>
+  </table>
+  <p>Each level only adds checks; it never removes anything the level below it does. L0
+  is the plain baseline every other condition is compared against.</p>
+  <div class="definition"><b>Guardrail</b> (first use): an automatic check that inspects
+  an AI agent's output or behavior and can reject, correct, or redirect it before it
+  counts as final.</div>
+</section>
+
+<section class="page">
+  <div class="pagenum">Page 6</div>
+  <h2 class="title">How the Experiment Worked</h2>
+  <ul>
+    <li><b>32 tasks × 4 conditions (L0, L1, L2, L3) = 128 total task-runs.</b></li>
+    <li>Every task was run once under each condition.</li>
+    <li>Everything was held identical across conditions <b>except which guardrail was
+      active</b>: same model, same tasks, same prompts, same temperature, same scoring
+      rules, same step budget.</li>
+    <li>All 128 runs were executed <b>in full</b> — nothing was skipped, re-tuned, or
+      cherry-picked. A small number of runs had to be retried after infrastructure
+      interruptions (background process kills, transient network drops); each retry is
+      logged with its cause in the project's retry log, and no retry was triggered by a
+      disliked result.</li>
+  </ul>
+  <div class="definition"><b>Trajectory</b> (first use): the full step-by-step sequence
+  of actions an agent takes while attempting a task, from start to finish.</div>
+  <div class="definition"><b>Baseline</b> (first use): the no-intervention condition
+  (L0) that every other condition is compared against.</div>
+</section>
+
+<section class="page">
+  <div class="pagenum">Page 7 &middot; Primary Result</div>
+  <h2 class="title">Accuracy</h2>
+  <figure><img src="outcome_figures/fig01_accuracy.png" alt="Accuracy L0-L3"></figure>
+  <h3 class="headline">Guardrails did not change task accuracy.</h3>
+  <p><span class="tag our">Our Result</span>All four conditions scored <b>18 out of 32
+  tasks correct (56.25%)</b> — exactly the same number, exactly the same tasks. No error
+  bars are shown because there is only one run per condition (temperature 0,
+  deterministic); this is a reported count, not an estimate.</p>
+</section>
+
+<section class="page">
+  <div class="pagenum">Page 8 &middot; Primary Result</div>
+  <h2 class="title">Cognitive Alignment</h2>
+  <figure><img src="outcome_figures/fig02_alignment.png" alt="Alignment L0-L3"></figure>
+  <h3 class="headline">No measurable change in cognitive alignment.</h3>
+  <div class="definition"><b>Cognitive alignment</b> (first use): our own measure of how
+  closely an agent's per-age performance tracks the difficulty curve we designed the
+  benchmark around — a single [0, 1] score, unique to this benchmark, and <b>not the
+  same scale or metric as the reference paper's composite score</b>.</div>
+  <p><span class="tag our">Our Result</span>All four conditions produced identical
+  alignment: <b>0.51875</b>. This is our own internal metric — it should not be read as
+  a claim about the original ChildAgentEval alignment metric, which was never made
+  public.</p>
+</section>
+
+<section class="page">
+  <div class="pagenum">Page 9 &middot; The Interesting Result</div>
+  <h2 class="title">L3</h2>
+  <figure><img src="outcome_figures/fig03_steps_l0_vs_l3.png" alt="L3 steps"></figure>
+  <figure><img src="outcome_figures/fig04_cost_l0_vs_l3.png" alt="L3 cost"></figure>
+  <figure><img src="outcome_figures/fig05_interventions.png" alt="L3 interventions"></figure>
+  <h3 class="headline">L3 changed the trajectory, but not the outcome.</h3>
+  <p><span class="tag our">Our Result</span>L3 was the only condition that actually
+  intervened during a run — <b>70 interventions</b>, mostly stepping in when the agent
+  stalled or repeated itself. The effect was on <i>efficiency</i>, not
+  <i>correctness</i>:</p>
+  <ul>
+    <li>Steps: 152 &rarr; 143 (<b>~5.9% fewer</b>)</li>
+    <li>Cost: $0.023440 &rarr; $0.021981 (<b>~6.2% less</b>)</li>
+    <li>Accuracy and alignment: <b>unchanged</b></li>
+  </ul>
+  <p>L1 and L2 recorded <b>zero</b> interventions in this run — every output and action
+  they checked already passed, so their true effect (if any) remains untested here
+  rather than disproven.</p>
+</section>
+
+<section class="page">
+  <div class="pagenum">Page 10</div>
+  <h2 class="title">Task-by-Task Result</h2>
+  <figure><img src="outcome_figures/fig06_task_outcome_matrix.png" alt="Task outcome matrix"></figure>
+  <h3 class="headline">The aggregate equality is not hiding task-level differences.</h3>
+  <p>This is not just "the average was the same" — every single one of the 32 tasks
+  landed on the identical correct/incorrect outcome in all four conditions. Green =
+  correct, red = incorrect, for every task and every guardrail level.</p>
+</section>
+
+<section class="page">
+  <div class="pagenum">Page 11</div>
+  <h2 class="title">What Does It Mean?</h2>
+  <h3 class="headline">What we found</h3>
+  <ul>
+    <li>No measurable difference was observed in task accuracy or cognitive alignment
+      across L0, L1, L2, and L3, on this benchmark, with this model, in this run
+      (paired comparison, n = 32 tasks, difference = 0.000, p = 1.000 in every
+      comparison).</li>
+    <li>L3 changed <i>how</i> the agent moved through tasks — fewer steps, lower cost —
+      without changing <i>which</i> answers it ultimately submitted.</li>
+  </ul>
+  <h3 class="headline" style="color:var(--warn)">What we cannot claim</h3>
+  <div class="callout warn">
+    <ul>
+      <li>We cannot claim guardrails "don't work" in general — only that none of the
+        three guardrail designs tested changed the outcome in this specific
+        experiment.</li>
+      <li>We cannot compare our numbers directly to the original ChildAgentEval paper
+        as a reproduction — its exact benchmark was never released, so our 32-task
+        benchmark is a separate, original instrument. The reference figures shown here
+        are context, not equivalence.</li>
+      <li>We ran each condition once (n = 1 run, though n = 32 tasks within each run),
+        at temperature 0. We do not know whether these results would replicate with
+        different random seeds, other models, or a larger task set.</li>
+    </ul>
+  </div>
+  <h3 class="headline" style="color:#a06400">What we learned</h3>
+  <p><span class="tag hyp">Hypothesis</span>L1 and L2 recorded zero interventions
+  because this particular model, at temperature 0, rarely produced malformed output or
+  invalid actions on these 32 tasks — so those guardrails had nothing to correct here,
+  not necessarily nothing they could ever correct.</p>
+  <p><span class="tag hyp">Hypothesis</span>L3's efficiency gain without an accuracy
+  gain suggests its interventions targeted redundant behavior (stalling, repeating)
+  rather than wrong answers — plausible, but not proven by this data alone.</p>
+</section>
+
+<section class="page">
+  <div class="pagenum">Page 12</div>
+  <h2 class="title">Limitations and Next Steps</h2>
+  <h3 class="headline" style="color:var(--warn)">Limitations</h3>
+  <ul>
+    <li>Single run per condition — no repeated trials, no variance estimate.</li>
+    <li>32 tasks total (4 per category, 8 per age) — a small benchmark, limited
+      statistical power.</li>
+    <li>L1 and L2 saw zero interventions in this run, so this study cannot say whether
+      they would matter under different conditions.</li>
+    <li>This is an original benchmark, not a validated psychometric instrument — it has
+      not been checked against any official cognitive-age assessment.</li>
+    <li>Only one model was tested (Qwen3.5-27B).</li>
+  </ul>
+  <h3 class="headline">What to test next</h3>
+  <ol>
+    <li>Repeat the same 128-run experiment with multiple seeds per condition to get real
+      variance estimates.</li>
+    <li>Deliberately construct tasks designed to trigger L1/L2 interventions, to test
+      whether those guardrails matter when they actually fire.</li>
+    <li>Run the same design on additional models to see if the "no measurable
+      difference" pattern holds beyond Qwen3.5-27B.</li>
+    <li>Expand the benchmark beyond 32 tasks to increase statistical power.</li>
+    <li>If official ChildAgentEval access is ever granted, run this same L0-L3
+      comparison on the real benchmark as a true reproduction.</li>
+    <li>Investigate task-level differences in <i>how</i> wrong answers were reached (not
+      just whether they were correct), using the recorded trajectories.</li>
+  </ol>
+  <div class="callout"><b>Closing summary:</b> in this one experiment, adding
+  supervision changed how the agent worked without changing what it got right or
+  wrong — a result worth testing further, not a final verdict on whether guardrails
+  matter.</div>
+</section>
+
+<section class="page">
+  <div class="pagenum">Appendix</div>
+  <h2 class="title">Additional Data</h2>
+  <p>These four figures provide context and breakdowns referenced above; they sit
+  outside the core 12-page narrative but use the same real data.</p>
+
+  <h3 class="headline">A1. Reference paper trajectory <span class="tag ref">Reference Paper Result</span></h3>
+  <figure><img src="outcome_figures/fig07_reference_trajectory.png" alt="Reference trajectory"></figure>
+  <p>Qwen3.5-27B baseline composite score by age, as reported in the original
+  ChildAgentEval paper (arXiv:2605.17894). Shown for context only — see Page 8 for why
+  this is not directly comparable to our results.</p>
+
+  <h3 class="headline">A2. Reference vs. our L0, side by side</h3>
+  <figure><img src="outcome_figures/fig08_reference_vs_l0_separate_panels.png" alt="Reference vs L0"></figure>
+  <p>Deliberately shown as two separate panels, not overlaid on one axis: the two
+  scores come from different item sets and different, non-commensurable scoring
+  systems. Putting them on one shared axis would visually imply they are the same
+  metric, which they are not.</p>
+
+  <h3 class="headline">A3. Results by age group</h3>
+  <figure><img src="outcome_figures/fig09_per_age.png" alt="Per-age results"></figure>
+  <p>All four conditions produced identical accuracy at every one of the four target
+  ages (7, 10, 13, 16) — age 7: 5/8, age 10: 4/8, age 13: 4/8, age 16: 5/8, in every
+  condition.</p>
+
+  <h3 class="headline">A4. Results by task category</h3>
+  <figure><img src="outcome_figures/fig10_per_category.png" alt="Per-category results"></figure>
+  <p>All four conditions also produced identical accuracy in every one of the 8 task
+  categories — perfect scores in abstraction, integrated reasoning, language, and
+  processing behavior; zero in planning, reasoning, and working memory; 50% in
+  visual-spatial. This pattern is real and identical across L0-L3, not an averaging
+  artifact.</p>
+</section>
+
+</main>
+
+<footer>
+  Independent Interactive Cognitive-Age Benchmark &mdash; not ChildAgentEval &middot;
+  Qwen3.5-27B via OpenRouter &middot; Full technical report: reports/benchmark_report.md
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,22 @@
+{
+  "task_id": "abstraction_age10_v1",
+  "category": "abstraction",
+  "dimension": "abstraction",
+  "target_age": 10,
+  "difficulty": "medium",
+  "version": "v1",
+  "instructions": "The items 'hammer' and 'screwdriver' share a property. Click the choice below that shares the same property, then click Finish.",
+  "interaction_kind": "multiple_choice",
+  "stimulus": {"prompt": "hammer, screwdriver -> both are: ?"},
+  "choices": [
+    {"id": "choice_a", "label": "wrench"},
+    {"id": "choice_b", "label": "apple"},
+    {"id": "choice_c", "label": "cloud"},
+    {"id": "choice_d", "label": "river"}
+  ],
+  "available_actions": ["click", "finish"],
+  "success_condition": {"type": "single_choice", "correct_choice_id": "choice_a"},
+  "failure_condition": {"type": "wrong_choice_or_incomplete"},
+  "maximum_steps": 4,
+  "scoring_rule": {"type": "binary", "correct": 1.0, "incorrect": 0.0}
+}

@@ -1,0 +1,178 @@
+{
+  "frozen_config": "configs/experiments/final_benchmark.yaml",
+  "frozen_git_commit": "849542ba9768e4e1297a735f56bd03ad0c6e84f4",
+  "task_set_sha256": "4e6ae6752b69bae171fe56f2918ec7c8b773f00d5581824d89747e87afe73df8",
+  "conditions": {
+    "L0": {
+      "condition": "L0",
+      "run_id": [
+        "independent_benchmark_v1"
+      ],
+      "experiment_ids": [
+        "c162c4a5-ac8e-4008-9efa-17e1c69c1b19",
+        "c919065b-b0cb-4c2d-99c0-ab9436333ac6"
+      ],
+      "model": [
+        "qwen/qwen3.5-27b"
+      ],
+      "provider": [
+        "openrouter"
+      ],
+      "temperature": [
+        0
+      ],
+      "guardrail_version": [
+        "None"
+      ],
+      "git_commit": [
+        "849542ba9768e4e1297a735f56bd03ad0c6e84f4"
+      ],
+      "configuration_hash": [
+        "edb8983df90eb9f5592dfbb7ae4a59750982a0c4116d4caa200abaa043ffdc6f"
+      ],
+      "n_tasks": 32,
+      "n_unique_task_ids": 32,
+      "timestamp_min": 1787561194.7326913,
+      "timestamp_max": 1787565211.5204594
+    },
+    "L1": {
+      "condition": "L1",
+      "run_id": [
+        "independent_benchmark_v1"
+      ],
+      "experiment_ids": [
+        "07df8212-deb9-42a1-af01-72583ea4b5fc",
+        "14610fa6-5f66-4987-a55c-160f161b18c6",
+        "3bdad543-b255-4b59-9b03-0b48ccfe12cb",
+        "47dc0a0a-1cfa-4ccd-80f1-569384be66a0",
+        "5fbc3c25-494c-4ea9-a71b-d6fc4595a966",
+        "a081883a-7911-44a3-b8a3-e924526df1f5",
+        "ac41beed-2b41-4309-b61b-cdadb889d0bf",
+        "dad35520-6237-450a-b3d0-f622cc720995",
+        "e6ba6061-8e15-411e-b80d-c0cae0fe6394",
+        "ee930b40-577a-4911-a2ec-fc84162694e0"
+      ],
+      "model": [
+        "qwen/qwen3.5-27b"
+      ],
+      "provider": [
+        "openrouter"
+      ],
+      "temperature": [
+        0
+      ],
+      "guardrail_version": [
+        "L1-v1"
+      ],
+      "git_commit": [
+        "849542ba9768e4e1297a735f56bd03ad0c6e84f4"
+      ],
+      "configuration_hash": [
+        "edb8983df90eb9f5592dfbb7ae4a59750982a0c4116d4caa200abaa043ffdc6f"
+      ],
+      "n_tasks": 32,
+      "n_unique_task_ids": 32,
+      "timestamp_min": 1787565442.5028777,
+      "timestamp_max": 1787569727.5266893
+    },
+    "L2": {
+      "condition": "L2",
+      "run_id": [
+        "independent_benchmark_v1"
+      ],
+      "experiment_ids": [
+        "4d925ac1-26f7-4e6f-9ebe-5d4b29fc3f16",
+        "54672efc-0a44-4777-8e7e-609f840f2715",
+        "55d7c92f-3db5-4483-a06f-ca71727a9014",
+        "67cb9ca4-3dc1-477a-b11f-3f90ee88f197",
+        "68669ff6-3787-4607-b84b-0ebbdba8cfab",
+        "8a3efe67-5f76-4888-830c-86d38b3dc319",
+        "b88c3516-01c1-4012-b369-cdf2e3119ea6",
+        "d47a13b7-cad7-446c-865e-df0db95f6991",
+        "eba963cb-8902-41d6-96fd-26f1fc70c03e"
+      ],
+      "model": [
+        "qwen/qwen3.5-27b"
+      ],
+      "provider": [
+        "openrouter"
+      ],
+      "temperature": [
+        0
+      ],
+      "guardrail_version": [
+        "L2-v1"
+      ],
+      "git_commit": [
+        "849542ba9768e4e1297a735f56bd03ad0c6e84f4"
+      ],
+      "configuration_hash": [
+        "edb8983df90eb9f5592dfbb7ae4a59750982a0c4116d4caa200abaa043ffdc6f"
+      ],
+      "n_tasks": 32,
+      "n_unique_task_ids": 32,
+      "timestamp_min": 1787569899.631084,
+      "timestamp_max": 1787574357.9553733
+    },
+    "L3": {
+      "condition": "L3",
+      "run_id": [
+        "independent_benchmark_v1"
+      ],
+      "experiment_ids": [
+        "53a3e35e-5ec8-4686-a434-f8d5f76775c8",
+        "64a4a7a6-d367-437f-9c61-c0061f91689a",
+        "672b0b6b-bd5e-442d-980c-ef2d6625d1da",
+        "8bb02b45-f9b9-47de-87a4-b873c2f7b0e6",
+        "8e39d063-493f-406c-9cd2-a75e4d0ba375",
+        "9622ee96-11ef-4891-bc5d-bb6b6cb9ee79",
+        "9ebb5f68-0b35-4786-85ba-a13230c4c437",
+        "a73aadc9-b9a4-46f9-a1f2-eaf3cdc01a57",
+        "c557c65b-545f-4267-916f-7aa3297687b0"
+      ],
+      "model": [
+        "qwen/qwen3.5-27b"
+      ],
+      "provider": [
+        "openrouter"
+      ],
+      "temperature": [
+        0
+      ],
+      "guardrail_version": [
+        "L3-v1"
+      ],
+      "git_commit": [
+        "849542ba9768e4e1297a735f56bd03ad0c6e84f4"
+      ],
+      "configuration_hash": [
+        "edb8983df90eb9f5592dfbb7ae4a59750982a0c4116d4caa200abaa043ffdc6f"
+      ],
+      "n_tasks": 32,
+      "n_unique_task_ids": 32,
+      "timestamp_min": 1787574513.1510108,
+      "timestamp_max": 1787578399.7837622
+    }
+  },
+  "project_ledger_cumulative_usd": 0.110349135,
+  "project_ledger_api_calls": 704,
+  "combined_benchmark_spend_usd": 0.11033022,
+  "benchmark_hard_cap_usd": 8.0,
+  "remaining_benchmark_budget_usd": 7.88966978,
+  "raw_data_paths": [
+    "data/independent_benchmark/raw/L0.jsonl",
+    "data/independent_benchmark/raw/L1.jsonl",
+    "data/independent_benchmark/raw/L2.jsonl",
+    "data/independent_benchmark/raw/L3.jsonl"
+  ],
+  "trajectory_paths": [
+    "data/independent_benchmark/raw/trajectories/L0/",
+    "data/independent_benchmark/raw/trajectories/L1/",
+    "data/independent_benchmark/raw/trajectories/L2/",
+    "data/independent_benchmark/raw/trajectories/L3/"
+  ],
+  "processed_data_dir": "data/independent_benchmark/processed/",
+  "statistics_dir": "data/independent_benchmark/statistics/",
+  "figures_dir": "reports/figures/",
+  "retry_log": "data/independent_benchmark/L0_retry_log.md"
+}

@@ -1,0 +1,23 @@
+{
+  "task_id": "planning_age7_v1",
+  "category": "planning",
+  "dimension": "planning",
+  "target_age": 7,
+  "difficulty": "easy",
+  "version": "v1",
+  "instructions": "To make a sandwich you must: get bread, add filling, then close the sandwich. Click the steps in the correct order, then click Finish.",
+  "interaction_kind": "sequence_click",
+  "stimulus": {
+    "sequence_display": [],
+    "targets": [
+      {"id": "step_get_bread", "label": "Get bread"},
+      {"id": "step_add_filling", "label": "Add filling"},
+      {"id": "step_close_sandwich", "label": "Close sandwich"}
+    ]
+  },
+  "available_actions": ["click", "finish"],
+  "success_condition": {"type": "exact_sequence", "expected_target_order": ["step_get_bread", "step_add_filling", "step_close_sandwich"]},
+  "failure_condition": {"type": "wrong_sequence_or_incomplete"},
+  "maximum_steps": 5,
+  "scoring_rule": {"type": "binary", "correct": 1.0, "incorrect": 0.0}
+}

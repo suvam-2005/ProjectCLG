@@ -1,0 +1,58 @@
+{
+  "L0": {
+    "n_tasks": 32,
+    "n_correct": 18,
+    "input_tokens": 102911,
+    "output_tokens": 2162,
+    "total_tokens": 105073,
+    "api_calls": 152,
+    "cost_usd": 0.023440365,
+    "interventions": 0,
+    "errors": 2,
+    "recoveries": 2,
+    "mean_steps": 4.75,
+    "intervention_rate": 0.0
+  },
+  "L1": {
+    "n_tasks": 32,
+    "n_correct": 18,
+    "input_tokens": 102926,
+    "output_tokens": 2139,
+    "total_tokens": 105065,
+    "api_calls": 152,
+    "cost_usd": 0.02340741,
+    "interventions": 0,
+    "errors": 2,
+    "recoveries": 2,
+    "mean_steps": 4.75,
+    "intervention_rate": 0.0
+  },
+  "L2": {
+    "n_tasks": 32,
+    "n_correct": 18,
+    "input_tokens": 102892,
+    "output_tokens": 2220,
+    "total_tokens": 105112,
+    "api_calls": 152,
+    "cost_usd": 0.023527140000000002,
+    "interventions": 0,
+    "errors": 1,
+    "recoveries": 1,
+    "mean_steps": 4.75,
+    "intervention_rate": 0.0
+  },
+  "L3": {
+    "n_tasks": 32,
+    "n_correct": 18,
+    "input_tokens": 96260,
+    "output_tokens": 2058,
+    "total_tokens": 98318,
+    "api_calls": 143,
+    "cost_usd": 0.021981180000000003,
+    "interventions": 70,
+    "errors": 2,
+    "recoveries": 2,
+    "mean_steps": 4.46875,
+    "intervention_rate": 0.48951048951048953
+  }
+}

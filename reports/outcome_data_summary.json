@@ -1,0 +1,168 @@
+{
+  "result_kind_note": "OUR_RESULT unless explicitly marked REFERENCE_RESULT",
+  "benchmark_name": "Independent Interactive Cognitive-Age Benchmark (NOT ChildAgentEval)",
+  "model": "qwen/qwen3.5-27b",
+  "n_tasks": 32,
+  "n_conditions": 4,
+  "n_total_task_runs": 128,
+  "by_condition": {
+    "L0": {
+      "accuracy": 0.5625,
+      "n_correct": 18,
+      "n_tasks": 32,
+      "alignment": 0.51875,
+      "interventions": 0,
+      "api_calls_total_steps": 152,
+      "cost_usd": 0.023440365,
+      "errors": 2,
+      "recoveries": 2
+    },
+    "L1": {
+      "accuracy": 0.5625,
+      "n_correct": 18,
+      "n_tasks": 32,
+      "alignment": 0.51875,
+      "interventions": 0,
+      "api_calls_total_steps": 152,
+      "cost_usd": 0.02340741,
+      "errors": 2,
+      "recoveries": 2
+    },
+    "L2": {
+      "accuracy": 0.5625,
+      "n_correct": 18,
+      "n_tasks": 32,
+      "alignment": 0.51875,
+      "interventions": 0,
+      "api_calls_total_steps": 152,
+      "cost_usd": 0.023527140000000002,
+      "errors": 1,
+      "recoveries": 1
+    },
+    "L3": {
+      "accuracy": 0.5625,
+      "n_correct": 18,
+      "n_tasks": 32,
+      "alignment": 0.51875,
+      "interventions": 70,
+      "api_calls_total_steps": 143,
+      "cost_usd": 0.021981180000000003,
+      "errors": 2,
+      "recoveries": 2
+    }
+  },
+  "per_age_correct_of_8": {
+    "L0": {
+      "7": 5,
+      "10": 4,
+      "13": 4,
+      "16": 5
+    },
+    "L1": {
+      "7": 5,
+      "10": 4,
+      "13": 4,
+      "16": 5
+    },
+    "L2": {
+      "7": 5,
+      "10": 4,
+      "13": 4,
+      "16": 5
+    },
+    "L3": {
+      "7": 5,
+      "10": 4,
+      "13": 4,
+      "16": 5
+    }
+  },
+  "per_category_accuracy": {
+    "L0": {
+      "abstraction": 1.0,
+      "integrated_reasoning": 1.0,
+      "language": 1.0,
+      "planning": 0.0,
+      "processing_behavior": 1.0,
+      "reasoning": 0.0,
+      "visual_spatial": 0.5,
+      "working_memory": 0.0
+    },
+    "L1": {
+      "abstraction": 1.0,
+      "integrated_reasoning": 1.0,
+      "language": 1.0,
+      "planning": 0.0,
+      "processing_behavior": 1.0,
+      "reasoning": 0.0,
+      "visual_spatial": 0.5,
+      "working_memory": 0.0
+    },
+    "L2": {
+      "abstraction": 1.0,
+      "integrated_reasoning": 1.0,
+      "language": 1.0,
+      "planning": 0.0,
+      "processing_behavior": 1.0,
+      "reasoning": 0.0,
+      "visual_spatial": 0.5,
+      "working_memory": 0.0
+    },
+    "L3": {
+      "abstraction": 1.0,
+      "integrated_reasoning": 1.0,
+      "language": 1.0,
+      "planning": 0.0,
+      "processing_behavior": 1.0,
+      "reasoning": 0.0,
+      "visual_spatial": 0.5,
+      "working_memory": 0.0
+    }
+  },
+  "l3_vs_l0_efficiency": {
+    "steps_l0": 152,
+    "steps_l3": 143,
+    "steps_pct_change": -5.92,
+    "cost_l0_usd": 0.023440365,
+    "cost_l3_usd": 0.021981180000000003,
+    "cost_pct_change": -6.23
+  },
+  "statistical_evidence": {
+    "comparison": "paired, n=32 tasks, L0 vs L1/L2/L3",
+    "mean_difference": 0.0,
+    "p_value": 1.0,
+    "note": "Every per-task outcome identical in all three comparisons; no sampling variance to compute an effect size from."
+  },
+  "reference_paper_result_qwen_baseline": {
+    "source": "arXiv:2605.17894, Section 5/5.1 Table 2, confidence=medium (cross-verified across two independent extraction passes)",
+    "scores_by_age": {
+      "7": 0.32,
+      "10": 0.34,
+      "13": 0.29,
+      "16": 0.3
+    },
+    "note": "NOT the same scale/metric as our accuracy/alignment. Context only, not a reproduction."
+  },
+  "cost_summary_usd": {
+    "combined_benchmark_spend": 0.11033022,
+    "benchmark_hard_cap": 8.0,
+    "project_lifetime_cumulative_spend": 0.110349135,
+    "project_lifetime_api_calls": 704,
+    "final_benchmark_inference_calls": 599
+  },
+  "test_suite": {
+    "passed": 239,
+    "total": 239
+  },
+  "provenance": {
+    "frozen_config": "configs/experiments/final_benchmark.yaml",
+    "raw_data": [
+      "data/independent_benchmark/raw/L0.jsonl",
+      "data/independent_benchmark/raw/L1.jsonl",
+      "data/independent_benchmark/raw/L2.jsonl",
+      "data/independent_benchmark/raw/L3.jsonl"
+    ],
+    "processed_data_dir": "data/independent_benchmark/processed/",
+    "reproducibility_manifest": "reports/reproducibility_manifest.json"
+  }
+}

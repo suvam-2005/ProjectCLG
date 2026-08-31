@@ -1,0 +1,23 @@
+{
+  "task_id": "abstraction_age16_v1",
+  "category": "abstraction",
+  "dimension": "abstraction",
+  "target_age": 16,
+  "difficulty": "very_hard",
+  "version": "v1",
+  "instructions": "Each item below is grouped by TWO shared properties: being both man-made AND used for measurement. Click the choice that fits both properties, then click Finish.",
+  "interaction_kind": "multiple_choice",
+  "stimulus": {"prompt": "ruler, thermometer, scale -> both man-made and used for measurement. Which fits?"},
+  "choices": [
+    {"id": "choice_a", "label": "mountain"},
+    {"id": "choice_b", "label": "clock"},
+    {"id": "choice_c", "label": "tree"},
+    {"id": "choice_d", "label": "cloud"},
+    {"id": "choice_e", "label": "river"}
+  ],
+  "available_actions": ["click", "finish"],
+  "success_condition": {"type": "single_choice", "correct_choice_id": "choice_b"},
+  "failure_condition": {"type": "wrong_choice_or_incomplete"},
+  "maximum_steps": 4,
+  "scoring_rule": {"type": "binary", "correct": 1.0, "incorrect": 0.0}
+}

@@ -11,6 +11,7 @@ from childagenteval_research.evaluation.statistics_utils import (
     paired_comparison,
     rank_correlation,
     spearman_rank_correlation,
+    welch_t_test,
 )
 
 
@@ -129,6 +130,30 @@ def test_benjamini_hochberg_rejects_more_than_bonferroni_on_same_data():
     bonf = bonferroni_correction(p_values, alpha=0.05)
     assert bh.n_comparisons == 8
     assert sum(bh.reject_null) >= sum(bonf.reject_null)
+
+
+def test_welch_t_test_identical_samples_gives_high_p_value():
+    result = welch_t_test([1.0, 2.0, 3.0, 4.0], [1.0, 2.0, 3.0, 4.0])
+    assert result.statistic == pytest.approx(0.0, abs=1e-9)
+    assert result.p_value_two_tailed == pytest.approx(1.0, abs=1e-6)
+    assert result.n1 == 4 and result.n2 == 4
+
+
+def test_welch_t_test_clearly_different_samples_gives_low_p_value():
+    result = welch_t_test([10.0, 11.0, 10.5, 10.8, 10.2], [1.0, 1.1, 0.9, 1.05, 0.95])
+    assert result.p_value_two_tailed < 0.01
+
+
+def test_welch_t_test_none_when_insufficient_data():
+    result = welch_t_test([1.0], [1.0, 2.0])
+    assert result.statistic is None
+    assert result.p_value_two_tailed is None
+    assert result.n1 == 1 and result.n2 == 2
+
+
+def test_welch_t_test_none_when_zero_variance_and_identical_means():
+    result = welch_t_test([5.0, 5.0], [5.0, 5.0])
+    assert result.statistic is None
 
 
 def test_multiple_comparison_correction_empty_input():

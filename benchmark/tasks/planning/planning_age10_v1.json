@@ -1,0 +1,25 @@
+{
+  "task_id": "planning_age10_v1",
+  "category": "planning",
+  "dimension": "planning",
+  "target_age": 10,
+  "difficulty": "medium",
+  "version": "v1",
+  "instructions": "To plant a seed you must: dig a hole, place the seed, cover with soil, then water it. One button is a distractor and not needed. Click only the needed steps in the correct order, then click Finish.",
+  "interaction_kind": "sequence_click",
+  "stimulus": {
+    "sequence_display": [],
+    "targets": [
+      {"id": "step_dig_hole", "label": "Dig a hole"},
+      {"id": "step_place_seed", "label": "Place the seed"},
+      {"id": "step_cover_soil", "label": "Cover with soil"},
+      {"id": "step_water", "label": "Water it"},
+      {"id": "step_paint_pot", "label": "Paint the pot (distractor)"}
+    ]
+  },
+  "available_actions": ["click", "finish"],
+  "success_condition": {"type": "exact_sequence", "expected_target_order": ["step_dig_hole", "step_place_seed", "step_cover_soil", "step_water"]},
+  "failure_condition": {"type": "wrong_sequence_or_incomplete"},
+  "maximum_steps": 6,
+  "scoring_rule": {"type": "binary", "correct": 1.0, "incorrect": 0.0}
+}

@@ -1,0 +1,22 @@
+{
+  "task_id": "processing_age10_v1",
+  "category": "processing_behavior",
+  "dimension": "processing_behavior",
+  "target_age": 10,
+  "difficulty": "medium",
+  "version": "v1",
+  "instructions": "Click the choice that exactly matches the target symbol: &%, then click Finish. Watch closely, some choices are nearly identical.",
+  "interaction_kind": "multiple_choice",
+  "stimulus": {"prompt": "Target symbol: &%"},
+  "choices": [
+    {"id": "choice_a", "label": "%&"},
+    {"id": "choice_b", "label": "&%"},
+    {"id": "choice_c", "label": "&&"},
+    {"id": "choice_d", "label": "%%"}
+  ],
+  "available_actions": ["click", "finish"],
+  "success_condition": {"type": "single_choice", "correct_choice_id": "choice_b"},
+  "failure_condition": {"type": "wrong_choice_or_incomplete"},
+  "maximum_steps": 4,
+  "scoring_rule": {"type": "binary", "correct": 1.0, "incorrect": 0.0}
+}

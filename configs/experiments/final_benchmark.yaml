@@ -1,0 +1,77 @@
+# FROZEN experiment specification for the full L0-L3 Independent Interactive
+# Cognitive-Age Benchmark run. Do not edit after the full run begins — any change to
+# task content, scoring, model, or guardrail logic after this point requires a new
+# benchmark_version and a new file, never a silent edit to this one.
+#
+# Frozen at git commit: 849542ba9768e4e1297a735f56bd03ad0c6e84f4
+# Frozen after: pilot run_01 (pre-fix, 6 malformed-output events) and run_02
+#   (post-fix, 0 malformed-output events) — see docs/phase5c_pilot_reliability_and_freeze.md
+
+benchmark_version: independent_benchmark_v1
+run_id: final_benchmark_v1
+
+model: qwen/qwen3.5-27b
+provider: openrouter
+temperature: 0
+max_output_tokens: 256
+
+# Task set: 8 categories x 4 ages x 1 task = 32 original task instances, reused
+# identically across all four conditions (guardrail fairness requirement).
+tasks_dir: benchmark/tasks
+pages_dir: benchmark/pages
+task_count: 32
+task_set_sha256: 4e6ae6752b69bae171fe56f2918ec7c8b773f00d5581824d89747e87afe73df8
+
+environment:
+  adapter: playwright_generic
+  headless: true
+  dom_assisted: true
+
+# Every request uses these — identical across L0-L3, per the fairness requirement.
+extra_request_params:
+  response_format: {type: json_object}
+  reasoning: {enabled: false}
+
+standard_age_prompt_path: configs/prompts/standard_age_prompt.placeholder.txt
+action_schema_fix_applied: true  # Phase 5C: forbids bare-scalar JSON responses (task-agnostic, applies identically to every task)
+
+# Per-task maximum_steps come from each task's own JSON spec (task_schema.py), capped
+# by this ceiling as a belt-and-suspenders safety bound. Every task in the pilot used
+# its full per-task maximum_steps in both pilot runs — plan cost/time projections
+# accordingly, not against an optimistic minimal-episode assumption.
+global_max_steps_ceiling: 9
+
+recovery_policy:
+  # Malformed model output -> a fixed, immutable "wait" substitution. The model is
+  # NEVER re-queried. Original raw output is preserved verbatim in telemetry
+  # (action.metadata.raw_model_output). Never counts as a click for scoring purposes
+  # (verified scoring-neutral in the pilot: run_01 and run_02 produced identical
+  # per-task correctness and identical per-task step counts despite run_01 having 6
+  # malformed/recovery events and run_02 having zero).
+  applies_uniformly_to: [L0, L1, L2, L3]
+
+conditions:
+  L0:
+    guardrail: none
+    guardrail_version: null
+  L1:
+    guardrail: output
+    guardrail_version: L1-v1
+  L2:
+    guardrail: action
+    guardrail_version: L2-v1
+  L3:
+    guardrail: dynamic
+    guardrail_version: L3-v1
+
+budget:
+  benchmark_hard_limit_usd: 8.00
+  benchmark_soft_limit_usd: 6.50
+  project_hard_limit_usd: 10.00
+  project_soft_limit_usd: 9.00
+  # Existing spend before this frozen run (never reset):
+  project_spend_before_freeze_usd: 0.015382185  # 0.000018915 (Phase 1) + 0.015363270 (pilot run_01+run_02)
+  benchmark_spend_before_freeze_usd: 0.015363270  # combined across pilot run_01 + run_02 (both condition L0)
+
+execution_order: [L0, L1, L2, L3]  # L0 frozen and reported before L1 begins, etc. — no later condition informs an earlier one.
+tuning_policy: "No prompt, task, scoring, or guardrail-threshold change is permitted after this freeze based on any condition's results."

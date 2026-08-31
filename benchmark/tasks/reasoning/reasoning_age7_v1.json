@@ -1,0 +1,21 @@
+{
+  "task_id": "reasoning_age7_v1",
+  "category": "reasoning",
+  "dimension": "reasoning",
+  "target_age": 7,
+  "difficulty": "easy",
+  "version": "v1",
+  "instructions": "Look at the pattern of numbers. Click the choice that continues it, then click Finish.",
+  "interaction_kind": "multiple_choice",
+  "stimulus": {"prompt": "2, 4, 6, 8, ?"},
+  "choices": [
+    {"id": "choice_a", "label": "9"},
+    {"id": "choice_b", "label": "10"},
+    {"id": "choice_c", "label": "12"}
+  ],
+  "available_actions": ["click", "finish"],
+  "success_condition": {"type": "single_choice", "correct_choice_id": "choice_b"},
+  "failure_condition": {"type": "wrong_choice_or_incomplete"},
+  "maximum_steps": 4,
+  "scoring_rule": {"type": "binary", "correct": 1.0, "incorrect": 0.0}
+}

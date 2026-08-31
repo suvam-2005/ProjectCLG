@@ -1,0 +1,28 @@
+{
+  "task_id": "planning_age16_v1",
+  "category": "planning",
+  "dimension": "planning",
+  "target_age": 16,
+  "difficulty": "very_hard",
+  "version": "v1",
+  "instructions": "To launch a small weather balloon you must: check weather conditions, fill the balloon with helium, attach the sensor package, calibrate the sensor, secure the parachute, then release the balloon. Two buttons are distractors. Click only the needed steps in the correct order, then click Finish.",
+  "interaction_kind": "sequence_click",
+  "stimulus": {
+    "sequence_display": [],
+    "targets": [
+      {"id": "step_check_weather", "label": "Check weather conditions"},
+      {"id": "step_fill_helium", "label": "Fill balloon with helium"},
+      {"id": "step_attach_sensor", "label": "Attach sensor package"},
+      {"id": "step_calibrate", "label": "Calibrate sensor"},
+      {"id": "step_secure_parachute", "label": "Secure parachute"},
+      {"id": "step_release", "label": "Release balloon"},
+      {"id": "step_paint_logo", "label": "Paint team logo (distractor)"},
+      {"id": "step_notify_press", "label": "Notify press (distractor)"}
+    ]
+  },
+  "available_actions": ["click", "finish"],
+  "success_condition": {"type": "exact_sequence", "expected_target_order": ["step_check_weather", "step_fill_helium", "step_attach_sensor", "step_calibrate", "step_secure_parachute", "step_release"]},
+  "failure_condition": {"type": "wrong_sequence_or_incomplete"},
+  "maximum_steps": 8,
+  "scoring_rule": {"type": "binary", "correct": 1.0, "incorrect": 0.0}
+}

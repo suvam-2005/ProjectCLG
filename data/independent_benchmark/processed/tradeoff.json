@@ -1,0 +1,30 @@
+{
+  "L0": {
+    "alignment": 0.51875,
+    "capability": 0.5625,
+    "alignment_gain_vs_l0": 0.0,
+    "capability_change_vs_l0": 0.0,
+    "capability_retention_vs_l0": 1.0
+  },
+  "L1": {
+    "alignment": 0.51875,
+    "capability": 0.5625,
+    "alignment_gain_vs_l0": 0.0,
+    "capability_change_vs_l0": 0.0,
+    "capability_retention_vs_l0": 1.0
+  },
+  "L2": {
+    "alignment": 0.51875,
+    "capability": 0.5625,
+    "alignment_gain_vs_l0": 0.0,
+    "capability_change_vs_l0": 0.0,
+    "capability_retention_vs_l0": 1.0
+  },
+  "L3": {
+    "alignment": 0.51875,
+    "capability": 0.5625,
+    "alignment_gain_vs_l0": 0.0,
+    "capability_change_vs_l0": 0.0,
+    "capability_retention_vs_l0": 1.0
+  }
+}

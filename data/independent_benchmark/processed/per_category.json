@@ -1,0 +1,42 @@
+{
+  "L0": {
+    "abstraction": 1.0,
+    "integrated_reasoning": 1.0,
+    "language": 1.0,
+    "planning": 0.0,
+    "processing_behavior": 1.0,
+    "reasoning": 0.0,
+    "visual_spatial": 0.5,
+    "working_memory": 0.0
+  },
+  "L1": {
+    "abstraction": 1.0,
+    "integrated_reasoning": 1.0,
+    "language": 1.0,
+    "planning": 0.0,
+    "processing_behavior": 1.0,
+    "reasoning": 0.0,
+    "visual_spatial": 0.5,
+    "working_memory": 0.0
+  },
+  "L2": {
+    "abstraction": 1.0,
+    "integrated_reasoning": 1.0,
+    "language": 1.0,
+    "planning": 0.0,
+    "processing_behavior": 1.0,
+    "reasoning": 0.0,
+    "visual_spatial": 0.5,
+    "working_memory": 0.0
+  },
+  "L3": {
+    "abstraction": 1.0,
+    "integrated_reasoning": 1.0,
+    "language": 1.0,
+    "planning": 0.0,
+    "processing_behavior": 1.0,
+    "reasoning": 0.0,
+    "visual_spatial": 0.5,
+    "working_memory": 0.0
+  }
+}

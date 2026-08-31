@@ -1,0 +1,22 @@
+{
+  "task_id": "reasoning_age10_v1",
+  "category": "reasoning",
+  "dimension": "reasoning",
+  "target_age": 10,
+  "difficulty": "medium",
+  "version": "v1",
+  "instructions": "Look at the pattern. Each step alternates adding 3 then adding 1. Click the choice that continues it, then click Finish.",
+  "interaction_kind": "multiple_choice",
+  "stimulus": {"prompt": "1, 4, 5, 8, 9, ?"},
+  "choices": [
+    {"id": "choice_a", "label": "10"},
+    {"id": "choice_b", "label": "11"},
+    {"id": "choice_c", "label": "12"},
+    {"id": "choice_d", "label": "13"}
+  ],
+  "available_actions": ["click", "finish"],
+  "success_condition": {"type": "single_choice", "correct_choice_id": "choice_c"},
+  "failure_condition": {"type": "wrong_choice_or_incomplete"},
+  "maximum_steps": 4,
+  "scoring_rule": {"type": "binary", "correct": 1.0, "incorrect": 0.0}
+}

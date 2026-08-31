@@ -1,0 +1,21 @@
+{
+  "task_id": "integrated_age7_v1",
+  "category": "integrated_reasoning",
+  "dimension": "integrated_reasoning",
+  "target_age": 7,
+  "difficulty": "easy",
+  "version": "v1",
+  "instructions": "There are 3 red balls and 2 blue balls. If you add 2 more red balls, how many red balls are there in total? Click your answer, then click Finish.",
+  "interaction_kind": "multiple_choice",
+  "stimulus": {"prompt": "3 red balls + 2 blue balls. Add 2 more red balls. How many red balls now?"},
+  "choices": [
+    {"id": "choice_a", "label": "4"},
+    {"id": "choice_b", "label": "5"},
+    {"id": "choice_c", "label": "7"}
+  ],
+  "available_actions": ["click", "finish"],
+  "success_condition": {"type": "single_choice", "correct_choice_id": "choice_b"},
+  "failure_condition": {"type": "wrong_choice_or_incomplete"},
+  "maximum_steps": 4,
+  "scoring_rule": {"type": "binary", "correct": 1.0, "incorrect": 0.0}
+}
