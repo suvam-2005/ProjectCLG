@@ -1,0 +1,9 @@
+{
+  "n": 32,
+  "mean_difference": 0.0,
+  "difference_ci_low": 0.0,
+  "difference_ci_high": 0.0,
+  "cohens_d_paired": null,
+  "welch_t_statistic": 0.0,
+  "welch_p_value": 1.0
+}

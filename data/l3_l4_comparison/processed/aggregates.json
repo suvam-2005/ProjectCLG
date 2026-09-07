@@ -1,0 +1,30 @@
+{
+  "L3": {
+    "n_tasks": 32,
+    "n_correct": 18,
+    "input_tokens": 96260,
+    "output_tokens": 2058,
+    "total_tokens": 98318,
+    "api_calls": 143,
+    "cost_usd": 0.021981180000000003,
+    "interventions": 70,
+    "errors": 2,
+    "recoveries": 2,
+    "mean_steps": 4.46875,
+    "intervention_rate": 0.48951048951048953
+  },
+  "L4": {
+    "n_tasks": 32,
+    "n_correct": 18,
+    "input_tokens": 44219,
+    "output_tokens": 918,
+    "total_tokens": 45137,
+    "api_calls": 66,
+    "cost_usd": 0.010054785,
+    "interventions": 31,
+    "errors": 2,
+    "recoveries": 2,
+    "mean_steps": 2.0625,
+    "intervention_rate": 0.4696969696969697
+  }
+}

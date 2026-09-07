@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Does L4 Match L3 for Less?</title>
+<style>
+  :root {
+    --bg: #f4f5f7;
+    --page-bg: #ffffff;
+    --ink: #1c1f24;
+    --sub: #55606b;
+    --accent: #2e9e6b;
+    --accent2: #4c8bf5;
+    --warn: #e05a4e;
+    --border: #e4e7eb;
+    --tag-ref: #8a8f98;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif;
+    line-height: 1.5;
+  }
+  header.hero {
+    padding: 64px 24px 40px;
+    text-align: center;
+    background: linear-gradient(180deg, #10141c 0%, #232a36 100%);
+    color: white;
+  }
+  header.hero h1 {
+    font-size: 2.4rem;
+    margin: 0 0 8px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+  header.hero h2 {
+    font-size: 1.2rem;
+    font-weight: 400;
+    color: #cfd6de;
+    margin: 0 0 20px;
+  }
+  header.hero .note {
+    max-width: 720px;
+    margin: 0 auto;
+    font-size: 0.92rem;
+    color: #9aa5b1;
+    border-top: 1px solid #333c48;
+    padding-top: 18px;
+  }
+  header.hero .note b { color: #e8ecf0; }
+
+  main { max-width: 900px; margin: 0 auto; padding: 32px 16px 80px; }
+
+  section.page {
+    background: var(--page-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 36px 40px;
+    margin-bottom: 28px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  section.page .pagenum {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--sub);
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  section.page h2.title {
+    font-size: 1.5rem;
+    margin: 0 0 18px;
+    font-weight: 800;
+  }
+  section.page h3.headline {
+    font-size: 1.25rem;
+    margin: 20px 0 10px;
+    font-weight: 800;
+    color: var(--accent);
+  }
+  section.page p { color: #333; font-size: 1.02rem; }
+  section.page ul, section.page ol { color: #333; font-size: 1rem; }
+
+  .diagram {
+    background: #f7f9fb;
+    border: 1px dashed #c6ccd3;
+    border-radius: 10px;
+    padding: 18px;
+    font-family: "Cascadia Code", Consolas, monospace;
+    font-size: 0.85rem;
+    color: #333;
+    overflow-x: auto;
+    white-space: pre;
+    margin: 16px 0;
+  }
+
+  table.levels {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 0.95rem;
+  }
+  table.levels th, table.levels td {
+    border: 1px solid var(--border);
+    padding: 10px 12px;
+    text-align: left;
+    vertical-align: top;
+  }
+  table.levels th { background: #f7f9fb; font-weight: 700; }
+  table.levels tr:nth-child(odd) td { background: #fbfcfd; }
+
+  figure { margin: 20px 0; text-align: center; }
+  figure img {
+    max-width: 100%;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+  }
+  figure figcaption {
+    font-size: 0.85rem;
+    color: var(--sub);
+    margin-top: 8px;
+  }
+
+  .tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 5px;
+    margin-right: 6px;
+  }
+  .tag.ref { background: #eceef1; color: var(--tag-ref); }
+  .tag.hyp { background: #fff3e0; color: #a06400; }
+  .tag.our { background: #e7f6ee; color: #1d7a4c; }
+
+  .callout {
+    border-left: 4px solid var(--accent2);
+    background: #f2f7ff;
+    border-radius: 6px;
+    padding: 14px 18px;
+    margin: 16px 0;
+    font-size: 0.95rem;
+  }
+  .callout.warn { border-left-color: var(--warn); background: #fdf1f0; }
+
+  .definition {
+    background: #f7f9fb;
+    border-radius: 8px;
+    padding: 10px 16px;
+    margin: 12px 0;
+    font-size: 0.92rem;
+    border: 1px solid var(--border);
+  }
+  .definition b { color: var(--accent2); }
+
+  footer {
+    text-align: center;
+    color: var(--sub);
+    font-size: 0.85rem;
+    padding: 20px;
+  }
+
+  @media print {
+    body { background: white; }
+    section.page { break-inside: avoid; box-shadow: none; border: none; page-break-after: always; }
+    header.hero { break-after: page; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <h1>Does L4 Match L3 for Less?</h1>
+  <h2>An Efficiency Comparison: L3 vs L4 Guardrails, Qwen3.5-27B</h2>
+  <p class="note">
+    This document compares two guardrail designs on the same 32-task <b>Independent
+    Interactive Cognitive-Age Benchmark</b> used in the original L0-L3 outcome brief
+    (<code>outcome_brief.html</code>). <b>L3</b>'s results are the existing, already-run
+    data. <b>L4</b> is a new guardrail run fresh for this comparison. Everything shown is
+    an <b>OUR RESULT</b> — no ground truth or correct-answer information was ever exposed
+    to either guardrail.
+  </p>
+</header>
+
+<main>
+
+<section class="page">
+  <div class="pagenum">Page 2</div>
+  <h2 class="title">The Question</h2>
+  <p><b>Can a guardrail reach the exact same task outcomes as L3, using less of the
+  model's time and the project's budget?</b></p>
+  <div class="diagram">   L3: repeat detected  --substitute-->  "wait"   (re-tried, re-flagged, ... until step cap)
+   L4: repeat detected  --substitute-->  "finish" (episode ends immediately)</div>
+  <p>L3 already showed that guardrails can change <i>how</i> an agent gets to an answer
+  without changing <i>which</i> answer it submits. L4 asks a narrower question: can that
+  same non-interference guarantee be kept while cutting the wasted steps out entirely?</p>
+</section>
+
+<section class="page">
+  <div class="pagenum">Page 3</div>
+  <h2 class="title">What L4 Changes</h2>
+  <p>L4 keeps L3's two triggers unchanged — the same repeated-action check, the same
+  five-step excessive-steps cap — and changes only what happens once a repeat is
+  detected:</p>
+  <table class="levels">
+    <tr><th>Level</th><th>On a detected repeat</th><th>Why</th></tr>
+    <tr><td><b>L3</b></td><td>Substitutes a no-op <code>"wait"</code>.</td>
+      <td>Breaks the immediate loop, but the very next step is no longer seen as a
+      "repeat" (the last <i>executed</i> action was "wait", not the click), so the model
+      can — and does — propose the same click again, requiring a fresh wait each time
+      until the excessive-steps cap eventually forces completion.</td></tr>
+    <tr><td><b>L4</b></td><td>Forces <code>"finish"</code> immediately.</td>
+      <td>Treats an exact repeat as evidence the model has nothing new to contribute this
+      episode, and ends it right away rather than waiting out the step cap.</td></tr>
+  </table>
+  <div class="definition"><b>Design note:</b> a first version of L4 tried something more
+  ambitious — redirecting a detected repeat to a different, untried on-page target,
+  hoping extra tries would occasionally land on a correct answer. Actually running it
+  surfaced a real bug: this benchmark's scoring keeps only an episode's <i>last</i> click
+  for multiple-choice tasks, so redirecting away from an already-correct repeat
+  overwrote a correct answer with a wrong one — regressing tasks L0/L1/L2/L3 all got
+  right. That version was discarded before being reported here; the "force finish"
+  design in this document cannot make this mistake, because it never issues a different
+  click — it only decides <i>when</i> to stop.</div>
+</section>
+
+<section class="page">
+  <div class="pagenum">Page 4</div>
+  <h2 class="title">How the Comparison Worked</h2>
+  <ul>
+    <li><b>Same 32 tasks, same model (Qwen3.5-27B via OpenRouter), same temperature (0),
+      same step budget, same scoring rules</b> as the original L0-L3 run.</li>
+    <li><b>L3:</b> the existing, already-validated run
+      (<code>data/independent_benchmark/raw/L3.jsonl</code>) — not re-run for this
+      comparison.</li>
+    <li><b>L4:</b> a fresh 32-task run executed for this comparison
+      (<code>data/independent_benchmark/raw/L4.jsonl</code>).</li>
+    <li>Both conditions charged against the same $8 combined benchmark cost cap as
+      L0-L3; L4's full run cost $0.010055 of that cap.</li>
+  </ul>
+</section>
+
+<section class="page">
+  <div class="pagenum">Page 5 &middot; Primary Result</div>
+  <h2 class="title">Accuracy</h2>
+  <figure><img src="l3_l4_comparison_figures/fig01_accuracy.png" alt="Accuracy L3 vs L4"></figure>
+  <h3 class="headline">Identical accuracy — 18 of 32 tasks correct, both conditions.</h3>
+  <p><span class="tag our">Our Result</span>L3 and L4 scored exactly <b>56.25%</b> —
+  the same count, and (see Page 8) the same 32 individual tasks. No error bars: one
+  deterministic run per condition (temperature 0).</p>
+</section>
+
+<section class="page">
+  <div class="pagenum">Page 6 &middot; Primary Result</div>
+  <h2 class="title">Cognitive Alignment</h2>
+  <figure><img src="l3_l4_comparison_figures/fig02_alignment.png" alt="Alignment L3 vs L4"></figure>
+  <h3 class="headline">Identical alignment: 0.51875.</h3>
+  <p><span class="tag our">Our Result</span>L4 preserved L3's alignment score exactly —
+  consistent with L4 never changing which answer a task submits, only when the episode
+  stops.</p>
+</section>
+
+<section class="page">
+  <div class="pagenum">Page 7 &middot; The Interesting Result</div>
+  <h2 class="title">Steps, Cost, and Interventions</h2>
+  <figure><img src="l3_l4_comparison_figures/fig03_steps.png" alt="Steps L3 vs L4"></figure>
+  <figure><img src="l3_l4_comparison_figures/fig04_cost.png" alt="Cost L3 vs L4"></figure>
+  <figure><img src="l3_l4_comparison_figures/fig05_interventions.png" alt="Interventions L3 vs L4"></figure>
+  <h3 class="headline">L4 reached the same outcomes at roughly half the cost.</h3>
+  <p><span class="tag our">Our Result</span></p>
+  <ul>
+    <li>Steps: 143 &rarr; 66 (<b>53.8% fewer</b>)</li>
+    <li>Cost: $0.021981 &rarr; $0.010055 (<b>54.3% less</b>)</li>
+    <li>Tokens: 98,318 &rarr; 45,137 (<b>54.1% fewer</b>)</li>
+    <li>Interventions: 70 (48.95% of L3's steps) &rarr; 31 (46.97% of L4's steps) —
+      fewer interventions <i>and</i> a shorter trajectory overall, because each L4
+      intervention ends the episode instead of repeating.</li>
+    <li>Accuracy and alignment: <b>unchanged</b></li>
+  </ul>
+</section>
+
+<section class="page">
+  <div class="pagenum">Page 8</div>
+  <h2 class="title">Task-by-Task Result</h2>
+  <figure><img src="l3_l4_comparison_figures/fig06_task_outcome_matrix.png" alt="Task outcome matrix L3 vs L4"></figure>
+  <h3 class="headline">Zero outcome flips in either direction.</h3>
+  <p>All 32 tasks landed on the identical correct/incorrect outcome under both
+  conditions — 0 tasks flipped incorrect&rarr;correct, 0 flipped correct&rarr;incorrect.
+  L4's efficiency gain did not come at the cost of a single task, and it did not buy any
+  new correct answers either — it is a pure cost/step reduction on an unchanged outcome
+  set.</p>
+</section>
+
+<section class="page">
+  <div class="pagenum">Page 9</div>
+  <h2 class="title">What Does It Mean?</h2>
+  <h3 class="headline">What we found</h3>
+  <ul>
+    <li>L4 is a strict efficiency improvement over L3 on this benchmark: same accuracy
+      (56.25%), same alignment (0.51875), same per-task outcomes (32/32 identical),
+      at ~54% less cost, steps, and tokens.</li>
+    <li>The gain comes entirely from ending a stuck episode the first time a repeat is
+      detected, instead of L3's wait-then-re-detect-then-wait-again pattern that only
+      terminates once the excessive-steps cap is hit.</li>
+  </ul>
+  <h3 class="headline" style="color:var(--warn)">What we cannot claim</h3>
+  <div class="callout warn">
+    <ul>
+      <li>L4 does not raise accuracy above L3/L0 on any task or category — planning,
+        reasoning, and working memory remain at 0% under L4, exactly as under L0-L3
+        (see Appendix). Ending a stuck episode sooner does not make a wrong answer
+        right.</li>
+      <li>This is not evidence that "redirecting" guardrail designs in general are
+        unsound — only that the specific untried-target redirect tried first here was,
+        for this benchmark's last-click-wins scoring rule (see Page 3).</li>
+      <li>Same limitations as the original L0-L3 study apply: one run per condition,
+        32 tasks, one model, an original (not psychometrically validated) benchmark.</li>
+    </ul>
+  </div>
+  <h3 class="headline" style="color:#a06400">What we learned</h3>
+  <p><span class="tag hyp">Hypothesis</span>Because the benchmark's tasks require very
+  few genuinely productive steps (most tasks: one click, then finish), a trajectory that
+  "gets stuck" is almost always stuck for the rest of the episode — so ending it
+  immediately loses little useful search and buys back most of the wasted budget.</p>
+</section>
+
+<section class="page">
+  <div class="pagenum">Page 10</div>
+  <h2 class="title">Limitations and Next Steps</h2>
+  <h3 class="headline" style="color:var(--warn)">Limitations</h3>
+  <ul>
+    <li>L3's data is reused from the original run, not re-executed alongside L4 in the
+      same session — both used identical config/model/temperature, so this is expected
+      to be immaterial, but it is not a same-session apples-to-apples run.</li>
+    <li>Single run per condition — no repeated trials, no variance estimate.</li>
+    <li>A guardrail cannot see a task's interaction_kind or success_condition by design
+      (no ground truth ever reaches it) — this is what made the discarded v1 redirect
+      design unsafe, and constrains what any future guardrail here can safely attempt.</li>
+  </ul>
+  <h3 class="headline">What to test next</h3>
+  <ol>
+    <li>Test whether immediate-finish-on-repeat holds up on a benchmark with tasks that
+      need more genuine multi-step exploration (where ending early risks cutting off
+      real progress, not just a stuck loop).</li>
+    <li>Investigate whether a guardrail can safely encourage retrying a <i>different</i>
+      answer for interaction kinds where doing so cannot destroy an already-correct
+      submission (e.g., only before any click has been made, never after).</li>
+    <li>Repeat with multiple seeds to get real variance estimates on the efficiency
+      gain.</li>
+  </ol>
+  <div class="callout"><b>Closing summary:</b> L4 shows that a guardrail can cut cost and
+  steps substantially without touching accuracy, alignment, or any individual task
+  outcome — but, like L3, it changes how the agent gets to an answer, not what the
+  answer is.</div>
+</section>
+
+<section class="page">
+  <div class="pagenum">Appendix</div>
+  <h2 class="title">Additional Data</h2>
+
+  <h3 class="headline">A1. Results by age group</h3>
+  <figure><img src="l3_l4_comparison_figures/fig07_per_age.png" alt="Per-age results L3 vs L4"></figure>
+  <p>Identical at every age under both conditions — age 7: 5/8, age 10: 4/8, age 13:
+  4/8, age 16: 5/8.</p>
+
+  <h3 class="headline">A2. Results by task category</h3>
+  <figure><img src="l3_l4_comparison_figures/fig08_per_category.png" alt="Per-category results L3 vs L4"></figure>
+  <p>Identical in every category under both conditions: perfect scores in abstraction,
+  integrated reasoning, language, and processing behavior; zero in planning, reasoning,
+  and working memory; 50% in visual-spatial.</p>
+</section>
+
+</main>
+
+<footer>
+  Independent Interactive Cognitive-Age Benchmark &mdash; not ChildAgentEval &middot;
+  Qwen3.5-27B via OpenRouter &middot; L3 vs L4 guardrail comparison &middot;
+  Full L0-L3 report: reports/outcome_brief.html
+</footer>
+
+</body>
+</html>

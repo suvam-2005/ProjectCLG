@@ -1,4 +1,4 @@
-"""Runs one condition (L0/L1/L2/L3) of the Independent Interactive Cognitive-Age
+"""Runs one condition (L0/L1/L2/L3/L4) of the Independent Interactive Cognitive-Age
 Benchmark against real Qwen3.5-27B via OpenRouter + real Chromium via Playwright.
 
 Usage:
@@ -34,6 +34,7 @@ from childagenteval_research.guardrails.interface import Guardrail, NoGuardrail
 from childagenteval_research.guardrails.l1_output import L1OutputGuardrail
 from childagenteval_research.guardrails.l2_action import L2ActionGuardrail
 from childagenteval_research.guardrails.l3_dynamic import L3DynamicGuardrail
+from childagenteval_research.guardrails.l4_dynamic import L4DynamicGuardrail
 from childagenteval_research.openrouter_client import OpenRouterClient
 from childagenteval_research.pricing import fetch_pricing
 from childagenteval_research.prompts import build_l0_messages, load_standard_age_prompt
@@ -56,7 +57,7 @@ def benchmark_ledger_path(condition: str) -> Path:
 
 def total_benchmark_spend() -> float:
     total = 0.0
-    for condition in ("L0", "L1", "L2", "L3"):
+    for condition in ("L0", "L1", "L2", "L3", "L4"):
         path = benchmark_ledger_path(condition)
         if path.exists():
             total += json.loads(path.read_text())["cumulative_cost_usd"]
@@ -73,6 +74,9 @@ def build_guardrail(condition: str) -> tuple[Guardrail, str | None]:
         return g, g.VERSION
     if condition == "L3":
         g = L3DynamicGuardrail()
+        return g, g.VERSION
+    if condition == "L4":
+        g = L4DynamicGuardrail()
         return g, g.VERSION
     raise ValueError(f"unknown condition: {condition!r}")
 
@@ -137,7 +141,7 @@ def run_one_task(
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--condition", required=True, choices=["L0", "L1", "L2", "L3"])
+    parser.add_argument("--condition", required=True, choices=["L0", "L1", "L2", "L3", "L4"])
     parser.add_argument("--pilot", action="store_true", help="run only 1 task per category at age 10")
     parser.add_argument("--task-ids", nargs="*", default=None, help="explicit task_id allowlist (overrides --pilot)")
     parser.add_argument("--out-subdir", default=None, help="path under data/ to write raw results to (default: independent_benchmark, or independent_benchmark/pilot/<run> with --pilot)")

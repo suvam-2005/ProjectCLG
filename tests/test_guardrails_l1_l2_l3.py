@@ -5,6 +5,7 @@ from childagenteval_research.guardrails.interface import GuardrailDecision
 from childagenteval_research.guardrails.l1_output import L1OutputGuardrail
 from childagenteval_research.guardrails.l2_action import L2ActionGuardrail
 from childagenteval_research.guardrails.l3_dynamic import L3DynamicGuardrail
+from childagenteval_research.guardrails.l4_dynamic import L4DynamicGuardrail
 from childagenteval_research.observation import Observation
 from childagenteval_research.telemetry.schema import TrajectoryRecord
 
@@ -149,6 +150,67 @@ def test_l3_forces_finish_after_excessive_steps():
 
 def test_l3_does_not_force_finish_when_agent_already_finishing():
     guardrail = L3DynamicGuardrail()
+    history = [make_record(i, {"action": "wait"}) for i in range(5)]
+    result = guardrail.evaluate(context={
+        "proposed_action": Action(action="finish"),
+        "history": history,
+        "step_number": 5,
+    })
+    assert result.decision == GuardrailDecision.ALLOW
+
+
+# ---- L4 ----
+
+def test_l4_allows_first_step_with_no_history():
+    guardrail = L4DynamicGuardrail()
+    result = guardrail.evaluate(context={
+        "proposed_action": Action(action="click", target="#a"),
+        "history": [],
+        "step_number": 0,
+    })
+    assert result.decision == GuardrailDecision.ALLOW
+
+
+def test_l4_forces_immediate_finish_on_repeated_action():
+    guardrail = L4DynamicGuardrail()
+    history = [make_record(0, {"action": "click", "target": "#choice_a"})]
+    result = guardrail.evaluate(context={
+        "proposed_action": Action(action="click", target="#choice_a"),
+        "history": history,
+        "step_number": 1,
+    })
+    assert result.decision == GuardrailDecision.MODIFY
+    assert parse_action(result.modified_content).action == "finish"
+    assert result.metadata["trigger"] == "repeated_action"
+    assert result.reason == "repeated_action_forced_immediate_completion"
+
+
+def test_l4_does_not_flag_different_consecutive_actions():
+    guardrail = L4DynamicGuardrail()
+    history = [make_record(0, {"action": "click", "target": "#choice_a"})]
+    result = guardrail.evaluate(context={
+        "proposed_action": Action(action="click", target="#choice_b"),
+        "history": history,
+        "step_number": 1,
+    })
+    assert result.decision == GuardrailDecision.ALLOW
+
+
+def test_l4_forces_finish_after_excessive_steps_same_as_l3():
+    guardrail = L4DynamicGuardrail()
+    history = [make_record(i, {"action": "wait"}) for i in range(5)]
+    result = guardrail.evaluate(context={
+        "proposed_action": Action(action="wait"),
+        "history": history,
+        "step_number": 5,
+    })
+    assert result.decision == GuardrailDecision.MODIFY
+    assert parse_action(result.modified_content).action == "finish"
+    assert result.metadata["trigger"] == "excessive_steps"
+
+
+def test_l4_does_not_force_finish_when_agent_already_finishing():
+    guardrail = L4DynamicGuardrail()
     history = [make_record(i, {"action": "wait"}) for i in range(5)]
     result = guardrail.evaluate(context={
         "proposed_action": Action(action="finish"),
