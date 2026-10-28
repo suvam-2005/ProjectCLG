@@ -204,7 +204,14 @@ def main() -> None:
         pricing=pricing,
     )
     layered_guard = LayeredCostGuard(project_guard=project_guard, benchmark_guard=benchmark_guard)
-    client = OpenRouterClient(model=config["model"], temperature=config["temperature"], cost_guard=layered_guard)
+    data_subdir = config.get("data_subdir", "independent_benchmark")
+    out_subdir = args.out_subdir or (f"{data_subdir}/pilot" if args.pilot else data_subdir)
+    out_dir = PROJECT_ROOT / "data" / out_subdir
+    raw_dir = out_dir / "raw"
+    client = OpenRouterClient(
+        model=config["model"], temperature=config["temperature"], cost_guard=layered_guard,
+        usage_log_path=raw_dir / f"{args.condition}_usage.jsonl" if config.get("log_usage") else None,
+    )
 
     identity = build_experiment_identity(config_path, run_id=config["run_id"])
     standard_age_prompt_path = PROJECT_ROOT / "configs" / "prompts" / "standard_age_prompt.placeholder.txt"
@@ -213,10 +220,6 @@ def main() -> None:
     def prompt_builder(task_spec, observation):
         return build_l0_messages(task_spec, observation, standard_age_prompt)
 
-    data_subdir = config.get("data_subdir", "independent_benchmark")
-    out_subdir = args.out_subdir or (f"{data_subdir}/pilot" if args.pilot else data_subdir)
-    out_dir = PROJECT_ROOT / "data" / out_subdir
-    raw_dir = out_dir / "raw"
     trajectory_dir = raw_dir / "trajectories" / args.condition
     results_path = raw_dir / f"{args.condition}.jsonl"
 
@@ -235,7 +238,12 @@ def main() -> None:
         prompt_builder=prompt_builder,
         max_output_tokens=config["max_output_tokens"],
         provider="openrouter",
-        extra_request_params={"response_format": {"type": "json_object"}, "reasoning": {"enabled": False}},
+        # Default is reasoning disabled (Qwen/Gemma/DeepSeek); a config may override this,
+        # e.g. for a model whose endpoint does not allow reasoning to be disabled.
+        extra_request_params=config.get(
+            "extra_request_params",
+            {"response_format": {"type": "json_object"}, "reasoning": {"enabled": False}},
+        ),
     )
 
     print(f"Running condition={args.condition} on {len(tasks)} tasks "

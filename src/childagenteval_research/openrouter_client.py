@@ -2,9 +2,11 @@
 cost-guard pre-check on every call. The API key is read from the environment only."""
 from __future__ import annotations
 
+import json
 import os
 import time
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Any
 
 import httpx
@@ -28,6 +30,9 @@ class OpenRouterClient:
     temperature: float
     cost_guard: CostGuard
     timeout_s: float = 60.0
+    # Optional: append one JSON line per call with the provider-reported usage breakdown
+    # (incl. reasoning tokens) — needed for models whose reasoning cannot be disabled.
+    usage_log_path: Path | None = None
 
     def __post_init__(self) -> None:
         api_key = os.environ.get("OPENROUTER_API_KEY")
@@ -68,6 +73,17 @@ class OpenRouterClient:
         usage = body.get("usage", {})
         input_tokens = usage.get("prompt_tokens", prompt_tokens_estimate)
         output_tokens = usage.get("completion_tokens", 0)
+        if self.usage_log_path is not None:
+            self.usage_log_path.parent.mkdir(parents=True, exist_ok=True)
+            with self.usage_log_path.open("a", encoding="utf-8") as f:
+                f.write(json.dumps({
+                    "request_id": body.get("id"),
+                    "task_id": task_id,
+                    "prompt_tokens": input_tokens,
+                    "completion_tokens": output_tokens,
+                    "reasoning_tokens": (usage.get("completion_tokens_details") or {}).get("reasoning_tokens"),
+                    "finish_reason": body["choices"][0].get("finish_reason"),
+                }) + "\n")
 
         actual_cost = self.cost_guard.record_actual(
             task_id=task_id,
@@ -79,7 +95,9 @@ class OpenRouterClient:
 
         return {
             "request_id": body.get("id"),
-            "content": body["choices"][0]["message"]["content"],
+            # A reasoning model can spend the whole token budget on reasoning and return no
+            # content; "" then fails action parsing and goes through normal recovery.
+            "content": body["choices"][0]["message"]["content"] or "",
             "input_tokens": input_tokens,
             "output_tokens": output_tokens,
             "latency_s": latency_s,

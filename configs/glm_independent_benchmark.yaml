@@ -1,0 +1,40 @@
+# Independent Interactive Cognitive-Age Benchmark — GLM 5.3 Flash run.
+# NOT ChildAgentEval. Identical to configs/independent_benchmark.yaml (the Qwen run)
+# except for the model, run_id, reasoning setting (see below), and where results/ledgers are written — same 32 tasks,
+# same prompt, same temperature, same token and step limits, same guardrails L0-L4.
+
+run_id: independent_benchmark_v1_glm_5_3_flash
+
+model: z-ai/glm-5.3-flash
+temperature: 0
+max_output_tokens: 256
+
+# DEVIATION from the Qwen/Gemma/DeepSeek runs: GLM 5.3 Flash's endpoint rejects
+# reasoning {enabled: false} ("Reasoning is mandatory for this endpoint and cannot be
+# disabled"), so this run uses the lowest available setting, effort "minimal". Every
+# call's provider-reported reasoning-token count is logged (log_usage) to
+# data/glm_benchmark/raw/<condition>_usage.jsonl so any reasoning that does occur is
+# measured and reported, not assumed away.
+extra_request_params:
+  response_format: {type: json_object}
+  reasoning: {effort: minimal}
+log_usage: true
+
+# Results go to data/glm_benchmark/ and cost ledgers to .state/glm/, so nothing
+# here can overwrite or mix with the Qwen data in data/independent_benchmark/.
+data_subdir: glm_benchmark
+ledger_tag: glm
+
+benchmark:
+  tasks_dir: ../benchmark/tasks
+  pages_dir: ../benchmark/pages
+
+budget:
+  benchmark_hard_limit_usd: 8.00
+  benchmark_soft_limit_usd: 6.50
+  project_hard_limit_usd: 10.00
+  project_soft_limit_usd: 9.00
+  max_api_calls: 4000
+  max_output_tokens_per_call: 256
+
+max_steps_per_task: 9
