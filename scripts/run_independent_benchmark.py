@@ -45,20 +45,24 @@ CONFIG_PATH = PROJECT_ROOT / "configs" / "independent_benchmark.yaml"
 PROJECT_LEDGER_PATH = PROJECT_ROOT / ".state" / "cost_ledger.json"
 
 
-def benchmark_ledger_path(condition: str) -> Path:
+def benchmark_ledger_path(condition: str, ledger_tag: str | None = None) -> Path:
     """Each condition gets its OWN ledger file — this is what makes running L0-L3 as
     separate parallel processes safe: no two processes ever read-modify-write the same
     file, so there is no lost-update race on the benchmark-only $8 tracking. The
     whole-project ledger (PROJECT_LEDGER_PATH) is still a single shared file; see
     docs/phase5c_pilot_reliability_and_freeze.md for why parallel writers to *that* file
     specifically are not yet safe, and why serial execution is recommended regardless."""
+    if ledger_tag:
+        # A different model's runs get their own ledger shards (and therefore their own
+        # $8 combined-benchmark cap) so they never mix with the Qwen ledgers.
+        return PROJECT_ROOT / ".state" / ledger_tag / f"benchmark_cost_ledger_{condition}.json"
     return PROJECT_ROOT / ".state" / f"benchmark_cost_ledger_{condition}.json"
 
 
-def total_benchmark_spend() -> float:
+def total_benchmark_spend(ledger_tag: str | None = None) -> float:
     total = 0.0
     for condition in ("L0", "L1", "L2", "L3", "L4"):
-        path = benchmark_ledger_path(condition)
+        path = benchmark_ledger_path(condition, ledger_tag)
         if path.exists():
             total += json.loads(path.read_text())["cumulative_cost_usd"]
     return total
@@ -144,11 +148,15 @@ def main() -> None:
     parser.add_argument("--condition", required=True, choices=["L0", "L1", "L2", "L3", "L4"])
     parser.add_argument("--pilot", action="store_true", help="run only 1 task per category at age 10")
     parser.add_argument("--task-ids", nargs="*", default=None, help="explicit task_id allowlist (overrides --pilot)")
-    parser.add_argument("--out-subdir", default=None, help="path under data/ to write raw results to (default: independent_benchmark, or independent_benchmark/pilot/<run> with --pilot)")
+    parser.add_argument("--out-subdir", default=None, help="path under data/ to write raw results to (default: the config's data_subdir, else independent_benchmark; with --pilot, <that>/pilot)")
+    parser.add_argument("--config", type=Path, default=CONFIG_PATH, help="experiment config (default: configs/independent_benchmark.yaml, the Qwen run)")
+    parser.add_argument("--resume", action="store_true", help="skip tasks already recorded in this condition's results file (after an interrupted run)")
     args = parser.parse_args()
 
     load_dotenv(PROJECT_ROOT / ".env")
-    config = yaml.safe_load(CONFIG_PATH.read_text())
+    config_path = args.config.resolve()
+    config = yaml.safe_load(config_path.read_text())
+    ledger_tag = config.get("ledger_tag")
 
     all_tasks = load_all_tasks(PROJECT_ROOT / "benchmark" / "tasks")
     if args.task_ids:
@@ -178,9 +186,10 @@ def main() -> None:
     # narrow race window (two processes could both read a stale combined total right
     # before either writes) — which is one of the reasons serial/batched execution is
     # recommended over true parallelism at this stage (see phase5c report).
-    this_ledger_path = benchmark_ledger_path(args.condition)
+    this_ledger_path = benchmark_ledger_path(args.condition, ledger_tag)
+    this_ledger_path.parent.mkdir(parents=True, exist_ok=True)
     this_existing = json.loads(this_ledger_path.read_text())["cumulative_cost_usd"] if this_ledger_path.exists() else 0.0
-    other_conditions_spent = total_benchmark_spend() - this_existing
+    other_conditions_spent = total_benchmark_spend(ledger_tag) - this_existing
     effective_hard_limit = config["budget"]["benchmark_hard_limit_usd"] - other_conditions_spent
     effective_soft_limit = config["budget"]["benchmark_soft_limit_usd"] - other_conditions_spent
 
@@ -197,18 +206,24 @@ def main() -> None:
     layered_guard = LayeredCostGuard(project_guard=project_guard, benchmark_guard=benchmark_guard)
     client = OpenRouterClient(model=config["model"], temperature=config["temperature"], cost_guard=layered_guard)
 
-    identity = build_experiment_identity(CONFIG_PATH, run_id=config["run_id"])
+    identity = build_experiment_identity(config_path, run_id=config["run_id"])
     standard_age_prompt_path = PROJECT_ROOT / "configs" / "prompts" / "standard_age_prompt.placeholder.txt"
     standard_age_prompt = load_standard_age_prompt(standard_age_prompt_path)
 
     def prompt_builder(task_spec, observation):
         return build_l0_messages(task_spec, observation, standard_age_prompt)
 
-    out_subdir = args.out_subdir or ("independent_benchmark/pilot" if args.pilot else "independent_benchmark")
+    data_subdir = config.get("data_subdir", "independent_benchmark")
+    out_subdir = args.out_subdir or (f"{data_subdir}/pilot" if args.pilot else data_subdir)
     out_dir = PROJECT_ROOT / "data" / out_subdir
     raw_dir = out_dir / "raw"
     trajectory_dir = raw_dir / "trajectories" / args.condition
     results_path = raw_dir / f"{args.condition}.jsonl"
+
+    if args.resume and results_path.exists():
+        done = {json.loads(l)["task_id"] for l in results_path.read_text(encoding="utf-8").splitlines() if l.strip()}
+        tasks = [t for t in tasks if t.task_id not in done]
+        print(f"--resume: {len(done)} tasks already recorded, {len(tasks)} remaining")
 
     guardrail, guardrail_version = build_guardrail(args.condition)
     agent = Agent(
@@ -226,7 +241,7 @@ def main() -> None:
     print(f"Running condition={args.condition} on {len(tasks)} tasks "
           f"(project spend before: ${project_guard.cumulative_cost_usd:.6f}, "
           f"this-condition spend before: ${benchmark_guard.cumulative_cost_usd:.6f}, "
-          f"combined benchmark spend before (all conditions): ${total_benchmark_spend():.6f})")
+          f"combined benchmark spend before (all conditions): ${total_benchmark_spend(ledger_tag):.6f})")
 
     global_step_ceiling = config["max_steps_per_task"]
     for i, task in enumerate(tasks):
@@ -238,10 +253,11 @@ def main() -> None:
         print(
             f"[{i + 1}/{len(tasks)}] {task.task_id} correct={result.correct} steps={result.steps} "
             f"interventions={result.interventions} cost=${result.cost_usd:.6f} "
-            f"benchmark_cumulative=${benchmark_guard.cumulative_cost_usd:.6f}"
+            f"benchmark_cumulative=${benchmark_guard.cumulative_cost_usd:.6f}",
+            flush=True,
         )
 
-    combined_after = total_benchmark_spend()
+    combined_after = total_benchmark_spend(ledger_tag)
     print(
         f"DONE condition={args.condition}. "
         f"this-condition spend now: ${benchmark_guard.cumulative_cost_usd:.6f}; "
