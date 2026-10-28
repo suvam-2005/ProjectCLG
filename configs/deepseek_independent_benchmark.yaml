@@ -1,0 +1,29 @@
+# Independent Interactive Cognitive-Age Benchmark — DeepSeek-V3.2 run.
+# NOT ChildAgentEval. Identical to configs/independent_benchmark.yaml (the Qwen run)
+# except for the model, run_id, and where results/ledgers are written — same 32 tasks,
+# same prompt, same temperature, same token and step limits, same guardrails L0-L4.
+
+run_id: independent_benchmark_v1_deepseek_v3_2
+
+model: deepseek/deepseek-v3.2
+temperature: 0
+max_output_tokens: 256
+
+# Results go to data/deepseek_benchmark/ and cost ledgers to .state/deepseek/, so nothing
+# here can overwrite or mix with the Qwen data in data/independent_benchmark/.
+data_subdir: deepseek_benchmark
+ledger_tag: deepseek
+
+benchmark:
+  tasks_dir: ../benchmark/tasks
+  pages_dir: ../benchmark/pages
+
+budget:
+  benchmark_hard_limit_usd: 8.00
+  benchmark_soft_limit_usd: 6.50
+  project_hard_limit_usd: 10.00
+  project_soft_limit_usd: 9.00
+  max_api_calls: 4000
+  max_output_tokens_per_call: 256
+
+max_steps_per_task: 9
